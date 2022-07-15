@@ -39,8 +39,17 @@ class UserController extends Controller{
         $user_info          =$request->get('user_info');
         $project_type       =$request->get('project_type');
         $group_info         =$request->get('group_info');
+        $type               =$request->input('type');
         $group_code         =$group_info->group_code??config('page.platform.group_code');
+//        $type               = 'user';
 //        $project_type       ='dispatcher';
+        if(!$project_type){
+            if ($type == 'user'){
+                $project_type = 'user';
+            }else{
+                $project_type = 'driver';
+            }
+        }
         /**初始化一下数据**/
         $info          =null;
         $select=['name','type','path','active_img','inactive_img','app_path','app_url','routine_path'];
@@ -55,7 +64,6 @@ class UserController extends Controller{
         }else{
             $foot_in=null;
         }
-
         if($foot_in){
             $info = SysFoot::where($user_foot_where)->whereIn('id',$foot_in)->select($select)->orderBy('sort','asc')->get();
         }else{

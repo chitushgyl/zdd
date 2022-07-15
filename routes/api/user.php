@@ -48,7 +48,7 @@ Route::group([
     ], function(){
         /******用户个人中心*******/
         Route::any('/index', 'DriverController@index');                               //首页数据
-        Route::any('/foot', 'DriverController@foot');                                 //底部导航
+//        Route::any('/foot', 'DriverController@foot');                                 //底部导航
         //用户个人中心
         Route::any('/get_identity', 'DriverController@get_identity');                 //获取身份角色
         Route::any('/update_pwd', 'DriverController@update_pwd');                     //修改密码
@@ -62,6 +62,22 @@ Route::group([
         });
     });
 });
+
+
+    /******用户个人中心*******/
+    Route::group([
+        'prefix' => 'driver','namespace'  => 'User',
+    ], function(){
+        /******用户个人中心*******/
+        Route::any('/foot', 'UserController@foot');                                 //底部导航
+        //用户个人中心
+        Route::any('/get_identity', 'UserController@get_identity');                 //获取身份角色
+        Route::any('/update_pwd', 'UserController@update_pwd');                     //修改密码
+        Route::any('/get_version', 'UserController@get_version');                   //获取App版本号
+        Route::any('/attestation', 'UserController@attestation');                   //企业认证
+        Route::any('/details', 'UserController@details');                           //企业认证
+    });
+
 
 
 Route::group([
