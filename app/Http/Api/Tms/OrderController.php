@@ -689,29 +689,7 @@ class OrderController extends Controller{
                     return $msg;
                 }
 
-                if (empty($v['good_number']) || $v['good_number'] <= 0) {
-                    $msg['code'] = 307;
-                    $msg['msg']  = '货物件数错误！';
-                    return $msg;
-                }
 
-                if (empty($v['good_weight']) || $v['good_weight'] <= 0) {
-                    $msg['code'] = 308;
-                    $msg['msg']  = '货物重量错误！';
-                    return $msg;
-                }
-
-                if (empty($v['good_volume']) || $v['good_volume'] <= 0) {
-                    $msg['code'] = 309;
-                    $msg['msg']  = '货物体积错误！';
-                    return $msg;
-                }
-
-                if (empty($v['clod'])) {
-                    $msg['code'] = 309;
-                    $msg['msg']  = '请选择温度！';
-                    return $msg;
-                }
                 $dispatcher[$k]['send_address_id']        = $send_address->self_id;
                 $dispatcher[$k]['send_sheng']             = $send_address->sheng;
                 $dispatcher[$k]['send_sheng_name']        = $send_address->sheng_name;
