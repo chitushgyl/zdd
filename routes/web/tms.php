@@ -359,9 +359,9 @@ Route::group([
     Route::any('/fastOrder/fastOrderDone','FastOrderController@fastOrderDone');
 
     /** 装多多**/
-    Route::any('/platform/index','PlatformController@addCarousel');
-    Route::any('/platform/index','PlatformController@addCarbrand');
-    Route::any('/platform/index','PlatformController@addCar');
+    Route::any('/platform/addCarousel','PlatformController@addCarousel');
+    Route::any('/platform/addCarbrand','PlatformController@addCarbrand');
+    Route::any('/platform/addCar','PlatformController@addCar');
 //    Route::any('/platform/index','PlatformController@addCarousel');
 });
 
