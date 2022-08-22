@@ -1192,22 +1192,10 @@ class UserController extends Controller{
 
             $info->image = img_for($info->image,'more');
             $info->road = img_for($info->road,'more');
-//            if($info->state == 'WAIT'){
-//                $info->state_view = '认证审核中...';
-//                $info->state_color = '';
-//                $info->state_show = img_for($tms_wallet_status[$info->state],'no_json');
-//            }elseif($info->state == 'SU'){
-//                $info->state_view = '认证成功';
-//                $info->state_color = '';
-//                $info->state_show = img_for($tms_wallet_status[$info->state],'no_json');
-//            }else{
-//                $info->state_view = '认证失败';
-//                $info->state_color = '';
-//                $info->state_show = img_for($tms_wallet_status[$info->state],'no_json');
-//            }
+
             if ($info->state == 'SU'){
-                $info->href = 'bms.56cold.com';
-                $info->pwd  = '123456';
+//                $info->href = 'bms.56cold.com';
+//                $info->pwd  = '123456';
             }
             $info->state_show = img_for($tms_wallet_status[$info->state],'no_json');
 //            dd($info);
