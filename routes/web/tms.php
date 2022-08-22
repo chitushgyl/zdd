@@ -357,6 +357,12 @@ Route::group([
     Route::any('/fastOrder/fastOrderPage','FastOrderController@fastOrderPage');
     Route::any('/fastOrder/fastOrderCancel','FastOrderController@fastOrderCancel');
     Route::any('/fastOrder/fastOrderDone','FastOrderController@fastOrderDone');
+
+    /** 装多多**/
+    Route::any('/platform/index','PlatformController@addCarousel');
+    Route::any('/platform/index','PlatformController@addCarbrand');
+    Route::any('/platform/index','PlatformController@addCar');
+//    Route::any('/platform/index','PlatformController@addCarousel');
 });
 
 
