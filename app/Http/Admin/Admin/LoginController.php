@@ -63,7 +63,7 @@ class LoginController extends Controller{
 
 
         $validator=Validator::make($input,$rules,$message);
-       //dump($input);
+       dd($input);
         if($validator->passes()){
             $user_token=null;
             $select=['self_id','login','pwd','name','group_code','group_name','use_flag','authority_id','delete_flag'];
