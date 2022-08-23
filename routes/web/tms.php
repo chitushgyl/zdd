@@ -364,6 +364,8 @@ Route::group([
     Route::any('/platform/addCar','PlatformController@addCar');
     Route::any('/platform/carouseList','PlatformController@carouseList');
     Route::any('/platform/carouselPage','PlatformController@carouselPage');
+    Route::any('/platform/brandList','PlatformController@brandList');
+    Route::any('/platform/brandPage','PlatformController@brandPage');
 //    Route::any('/platform/index','PlatformController@addCarousel');
 });
 
