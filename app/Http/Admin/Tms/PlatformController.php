@@ -137,7 +137,9 @@ class PlatformController extends CommonController{
         ];
 
         $where=get_list_where($search);
-
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$search;
         $select=['self_id','picture','sort'];
         switch ($group_info['group_id']){
             case 'all':
