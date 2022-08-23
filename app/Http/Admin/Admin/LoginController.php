@@ -47,10 +47,10 @@ class LoginController extends Controller{
         $pwd            =$request->input('pwd');
 
 		//dump($login);dump($pwd);
-//        /**  虚拟数据
+        /**  虚拟数据
         $input['login']=$login='admin';
         $input['pwd']=$pwd='forlove504616';
-//         */
+         */
 
         $rules=[
             'login'=>'required',
