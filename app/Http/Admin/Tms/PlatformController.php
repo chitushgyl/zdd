@@ -6,7 +6,7 @@ namespace App\Http\Admin\tms;
 use App\Http\Controllers\CommonController;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
-use http\Env\Request;
+use Illuminate\Http\Request;
 
 class PlatformController extends CommonController{
 
