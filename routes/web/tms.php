@@ -362,7 +362,7 @@ Route::group([
     Route::any('/platform/addCarousel','PlatformController@addCarousel');
     Route::any('/platform/addCarbrand','PlatformController@addCarbrand');
     Route::any('/platform/addCar','PlatformController@addCar');
-    Route::any('/platform/carouseList','PlatformController@carouseList');
+    Route::any('/platform/carouselList','PlatformController@carouselList');
     Route::any('/platform/carouselPage','PlatformController@carouselPage');
     Route::any('/platform/brandList','PlatformController@brandList');
     Route::any('/platform/brandPage','PlatformController@brandPage');
