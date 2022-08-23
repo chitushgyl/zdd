@@ -294,8 +294,8 @@ class PlatformController extends CommonController{
         $firstrow       =($page-1)*$listrows;
 
         $search=[
-            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
-            ['type'=>'all','name'=>'use_flag','value'=>$use_flag],
+//            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+//            ['type'=>'all','name'=>'use_flag','value'=>$use_flag],
         ];
 
         $where=get_list_where($search);
