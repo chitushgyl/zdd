@@ -97,6 +97,86 @@ class PlatformController extends CommonController{
         }
     }
 
+    /***    轮播图列表头部      /tms/car/carList
+     */
+    public function  carouseList(Request $request){
+        $data['page_info']      =config('page.listrows');
+        $data['button_info']    =$request->get('anniu');
+
+        $abc='轮播图';
+        $data['import_info']    =[
+            'import_text'=>'下载'.$abc.'导入示例文件',
+            'import_color'=>'#FC5854',
+            'import_url'=>config('aliyun.oss.url').'execl/2020-07-02/TMS车辆导入文件范本.xlsx',
+        ];
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
+    /**
+     * 轮播图列表
+     * */
+    public function carouselPage(Request $request){
+        /** 接收中间件参数**/
+        $group_info     = $request->get('group_info');//接收中间件产生的参数
+        $button_info    = $request->get('anniu');//接收中间件产生的参数
+
+        /**接收数据*/
+        $num            =$request->input('num')??10;
+        $page           =$request->input('page')??1;
+        $use_flag       =$request->input('use_flag');
+        $listrows       =$num;
+        $firstrow       =($page-1)*$listrows;
+
+        $search=[
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'all','name'=>'use_flag','value'=>$use_flag],
+        ];
+
+        $where=get_list_where($search);
+
+        $select=['self_id','picture','sort'];
+        switch ($group_info['group_id']){
+            case 'all':
+                $data['total']=AppCarousel::where($where)->count(); //总的数据量
+                $data['items']=AppCarousel::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+
+            case 'one':
+                $where[]=['group_code','=',$group_info['group_code']];
+                $data['total']=AppCarousel::where($where)->count(); //总的数据量
+                $data['items']=AppCarousel::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='N';
+                break;
+
+            case 'more':
+                $data['total']=AppCarousel::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
+                $data['items']=AppCarousel::where($where)->whereIn('group_code',$group_info['group_code'])
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+        }
+
+        foreach ($data['items'] as $k=>$v) {
+                $v->picture = img_for('no_json',$v->picture);
+        }
+
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
 
     /**
      * 添加品牌
@@ -121,14 +201,12 @@ class PlatformController extends CommonController{
         /*** 虚拟数据
         //        $input['self_id']         =$self_id='good_202007011336328472133661';
         //        $input['brand']           =$brand='good_202007011336328472133661';
-
          **/
         $rules=[
             'brand'=>'required',
         ];
         $message=[
             'brand.required'=>'请选择要上传的图片',
-
         ];
 
         $validator=Validator::make($input,$rules,$message);
