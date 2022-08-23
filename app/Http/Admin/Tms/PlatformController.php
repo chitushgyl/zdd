@@ -99,7 +99,7 @@ class PlatformController extends CommonController{
 
     /***    轮播图列表头部      /tms/car/carList
      */
-    public function  carouseList(Request $request){
+    public function  carouselList(Request $request){
         $data['page_info']      =config('page.listrows');
         $data['button_info']    =$request->get('anniu');
 
