@@ -256,6 +256,8 @@ Route::group([
         Route::any('/discuss/billDetails','DiscussController@billDetails');
 
 
+
+
     });
     Route::group([
         'prefix' => 'api','namespace'  => 'Tms',
@@ -278,5 +280,8 @@ Route::group([
     Route::any('/address/get_city', 'AddressController@get_city');
     Route::any('/order/orderList', 'OrderController@orderList');
     Route::any('/take/orderList', 'TakeController@orderList');//app接单列表头部
+
+    /**装多多司机**/
+    Route::any('/home/getCarousel','HomeController@getCarousel');
 });
 

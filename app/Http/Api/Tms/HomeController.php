@@ -3,12 +3,22 @@ namespace App\Http\Api\Tms;
 
 
 
-use http\Env\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Tms\AppCarousel;
+use Illuminate\Http\Request;
 
-class HomeController extends Controller{
+
+class HomeController extends Controller {
 
       public function index(Request $request){
+          $user_info     = $request->get('user_info');//接收中间件产生的参数
+          $project_type       =$request->get('project_type');
 
+          //获取轮播图
+          $info['carousel'] = AppCarousel::where('delete_flag','Y')->limit(5)->get();
+          //获取订单
+
+          //
       }
 
       /*
@@ -57,7 +67,22 @@ class HomeController extends Controller{
        * 轮播图
        * */
       public function getCarousel(Request $request){
+          $user_info     = $request->get('user_info');//接收中间件产生的参数
+          $project_type       =$request->get('project_type');
 
+          //获取轮播图
+          $info = AppCarousel::where('delete_flag','Y')->limit(5)->get();
+          if($info){
+              foreach($info as $k =>$v){
+                  $v->img = img_for($v->picture,'more');
+              }
+          }
+
+          $msg['code'] = 200;
+          $msg['msg']  = "数据拉取成功";
+          $msg['data'] = $info;
+
+          return $msg;
       }
 
       /*
