@@ -283,5 +283,6 @@ Route::group([
 
     /**装多多司机**/
     Route::any('/home/getCarousel','HomeController@getCarousel');
+    Route::any('/home/getCar','HomeController@getCar');
 });
 

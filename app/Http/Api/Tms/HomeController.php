@@ -5,6 +5,8 @@ namespace App\Http\Api\Tms;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tms\AppCarousel;
+use App\Models\Tms\CarBrand;
+use App\Models\Tms\TmsCarType;
 use Illuminate\Http\Request;
 
 
@@ -89,10 +91,37 @@ class HomeController extends Controller {
        * 车型 品牌
        * */
       public function getCar(Request $request){
+          $user_info     = $request->get('user_info');//接收中间件产生的参数
+          $project_type       =$request->get('project_type');
+
+          //获取品牌
+          $select = ['self_id','brand','delete_flag','use_flag'];
+          $info['brand'] = CarBrand::where('delete_flag','Y')->select($select)->get();
+          //获取车型
+          $select1 = ['self_id','parame_name','delete_flag'];
+          $info['type']=TmsCarType::where('delete_flag','Y')->select($select1)->get();
+
+          $msg['code'] = 200;
+          $msg['msg']  = "数据拉取成功";
+          $msg['data'] = $info;
+          return $msg;
 
       }
 
-      /*
-       *
+      /**
+       * 获取车辆
        * */
+    public  function getCars(Request $request){
+        $user_info     = $request->get('user_info');//接收中间件产生的参数
+        $project_type       =$request->get('project_type');
+        //接收数据
+        $car_type     = $request->input('car_type');
+        $brand_type   = $request->input('brand_type');
+
+        $search = [
+            ['type'=>'=','name'=>'car_type','value'=>$car_type],
+            ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
+        ];
+        $where=get_list_where($search);
+    }
 }

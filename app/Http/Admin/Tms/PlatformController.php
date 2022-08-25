@@ -60,7 +60,7 @@ class PlatformController extends CommonController{
             }else{
 
                 $data['self_id']            =generate_id('c_');
-                $data['picture']            =img_for($picture,'in');
+                $data['picture']            =img_for($picture,'on_json');
                 $data['sort']               =$sort;
                 $data['create_time']        =$data['update_time']=$now_time;
 
@@ -231,7 +231,7 @@ class PlatformController extends CommonController{
                 $data['create_time']        =$data['update_time']=$now_time;
 
                 $id=CarBrand::insert($data);
-                $operationing->access_cause='新建轮播图';
+                $operationing->access_cause='新建品牌';
                 $operationing->operation_type='create';
 
             }
