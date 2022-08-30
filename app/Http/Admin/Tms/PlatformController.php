@@ -7,6 +7,7 @@ use App\Http\Controllers\CommonController;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
+use App\Models\Tms\TmsCarType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
