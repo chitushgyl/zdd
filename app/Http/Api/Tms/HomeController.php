@@ -4,6 +4,7 @@ namespace App\Http\Api\Tms;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
 use App\Models\Tms\TmsCarType;
@@ -44,7 +45,7 @@ class HomeController extends Controller {
           ];
 
           $where = get_list_where($search);
-          $select = ['self_id','car_brand','car_number','car_possess','weight','volam','control','car_type_name','use_flag','contacts','tel','medallion','license'];
+          $select = ['self_id','car_brand'];
           $data['info'] = TmsCar::where($where)
               ->offset($firstrow)
               ->limit($listrows)
@@ -123,5 +124,26 @@ class HomeController extends Controller {
             ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
         ];
         $where=get_list_where($search);
+        $select = [];
+        $select1 = ['self_id','parame_name'];
+        $info = AppCar::with(['tmsCarType'=>function($query)use($select1){
+            $query->select($select1);
+        }])->where($where)->select($select)->get();
+
+        if($info){
+            foreach($info as $k => $v){
+                $v->picture = img_for($v->picture,'more');
+            }
+        }
+
+        $msg['code'] = 200;
+        $msg['msg']  = "数据拉取成功";
+        $msg['data'] = $info;
+        return $msg;
+
+
+
     }
+
+
 }

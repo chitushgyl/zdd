@@ -4,14 +4,18 @@ namespace App\Http\Admin\tms;
 
 
 use App\Http\Controllers\CommonController;
+use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\StatusController as Status;
 
 class PlatformController extends CommonController{
-
+   /**
+    * 添加轮播图
+    * */
     public function addCarousel(Request $request){
         $operationing   = $request->get('operationing');//接收中间件产生的参数
         $now_time       =date('Y-m-d H:i:s',time());
@@ -359,33 +363,33 @@ class PlatformController extends CommonController{
         /** 接收数据*/
         $self_id            =$request->input('self_id');
         $group_code         =$request->input('group_code');
-        $car_brand          =$request->input('car_brand');
-        $car_number         =$request->input('car_number');
-        $car_nuclear        =$request->input('car_nuclear');
-        $car_possess        =$request->input('car_possess');
-        $remark             =$request->input('remark');
-        $weight             =$request->input('weight');
-        $volam              =$request->input('volam');
-        $control            =$request->input('control');
-        $check_time         =$request->input('check_time');
-        $license            =$request->input('license');
-        $medallion          =$request->input('medallion');
-        $board_time         =$request->input('board_time');
-        $car_type_id        =$request->input('car_type_id');
-        $contacts        =$request->input('contacts');
-        $tel        =$request->input('tel');
+        $brand              =$request->input('brand');
+        $type               =$request->input('type');
+        $car_type           =$request->input('car_type');
+        $price              =$request->input('price');
+        $view               =$request->input('view');
+        $car_name           =$request->input('car_name');
+        $picture            =$request->input('picture');
+//        $control            =$request->input('control');
+//        $check_time         =$request->input('check_time');
+//        $license            =$request->input('license');
+//        $medallion          =$request->input('medallion');
+//        $board_time         =$request->input('board_time');
+//        $car_type_id        =$request->input('car_type_id');
+//        $contacts        =$request->input('contacts');
+//        $tel        =$request->input('tel');
 
 
         /*** 虚拟数据
         //        $input['self_id']         =$self_id='good_202007011336328472133661';
         $input['group_code']        =$group_code='1234';
-        $input['car_brand']         =$car_brand='64';
-        $input['car_number']        =$car_number='沪A45612';
-        $input['car_nuclear']       =$car_nuclear='64';
-        $input['car_possess']       =$car_possess='GIUIUIT';
-        $input['remark']            =$remark='GIUIUIT';
-        $input['weight']            =$weight='GIUIUIT';
-        $input['volam']             =$volam='GIUIUIT';
+        $input['brand']             =$brand='64';
+        $input['car_type']          =$type='沪A45612';
+        $input['type']              =$type='64';
+        $input['price']             =$price='GIUIUIT';
+        $input['view']              =$view='GIUIUIT';
+        $input['car_name']          =$car_name='GIUIUIT';
+        $input['picture']           =$picture='GIUIUIT';
         $input['control']           =$control='GIUIUIT';
         $input['check_time']        =$check_time='2020-01-02';
         $input['license']           =$license='GIUIUIT';
@@ -396,30 +400,23 @@ class PlatformController extends CommonController{
         $input['tel']               =$tel='18564516123';
          **/
         $rules=[
-            'car_number'=>'required',
-            'car_type_id'=>'required',
-            'contacts'=>'required',
-            'tel'=>'required',
+            'brand'=>'required',
+            'car_name'=>'required',
+            'price'=>'required',
         ];
         $message=[
-            'car_number.required'=>'车牌号必须填写',
-            'car_type_id.required'=>'车型必须选择',
-            'contacts.required'=>'车辆联系人必须填写',
-            'tel.required'=>'车辆联系电话必须填写',
+            'brand.required'=>'请填写车辆品牌',
+            'car_name.required'=>'请填写车辆名称',
+            'price.required'=>'请填写车辆价格',
         ];
 
         $validator=Validator::make($input,$rules,$message);
         if($validator->passes()) {
 
-            $group_name     =SystemGroup::where('group_code','=',$group_code)->value('group_name');
-            if(empty($group_name)){
-                $msg['code'] = 301;
-                $msg['msg'] = '公司不存在';
-                return $msg;
-            }
+
             $where_car_type=[
                 ['delete_flag','=','Y'],
-                ['self_id','=',$car_type_id],
+                ['self_id','=',$car_type],
             ];
             $info2 = TmsCarType::where($where_car_type)->select('self_id','parame_name')->first();
             if (empty($info2)) {
@@ -428,56 +425,34 @@ class PlatformController extends CommonController{
                 return $msg;
             }
 
-            if($self_id){
-                $name_where=[
-                    ['self_id','!=',$self_id],
-                    ['car_number','=',$car_number],
-                    ['delete_flag','=','Y'],
-                    ['group_code','=',$group_code]
-                ];
-            }else{
-                $name_where=[
-                    ['car_number','=',$car_number],
-                    ['delete_flag','=','Y'],
-                    ['group_code','=',$group_code]
-                ];
-            }
+            $data['car_type']          =$car_type;
+            $data['brand']             =$brand;
+            $data['type']              =$type;
+            $data['car_name']          =$car_name;
+            $data['view']              =$view;
+            $data['price']             =$price;
+            $data['picture']           =img_for($picture,'more');
 
-            $carnumber = TmsCar::where($name_where)->count();
-
-            if ($carnumber>0){
-                $msg['code'] = 308;
-                $msg['msg'] = '车牌号已存在，请重新填写';
-                return $msg;
-            }
-
-            $data['car_number']        =$car_number;
-            $data['car_brand']         =$car_brand;
-            $data['car_nuclear']       =$car_nuclear;
-            $data['car_possess']       =$car_possess;
-            $data['remark']            =$remark;
-            $data['weight']            =$weight;
-            $data['volam']             =$volam;
-            $data['control']           =$control;
-            $data['check_time']        =$check_time;
-            $data['license']           =$license;
-            $data['medallion']         =$medallion;
-            $data['board_time']        =$board_time;
-            $data['car_type_id']       =$info2->self_id;
-            $data['car_type_name']     =$info2->parame_name;
+//            $data['control']           =$control;
+//            $data['check_time']        =$check_time;
+//            $data['license']           =$license;
+//            $data['medallion']         =$medallion;
+//            $data['board_time']        =$board_time;
+//            $data['car_type_id']       =$info2->self_id;
+//            $data['car_type_name']     =$info2->parame_name;
 
             //dump($data);
 
             //dd($input);
             $wheres['self_id'] = $self_id;
-            $old_info=TmsCar::where($wheres)->first();
+            $old_info=AppCar::where($wheres)->first();
 
             if($old_info){
                 //dd(1111);
                 $data['update_time']=$now_time;
-                $id=TmsCar::where($wheres)->update($data);
+                $id=AppCar::where($wheres)->update($data);
 
-                $operationing->access_cause='修改车辆';
+                $operationing->access_cause='添加车辆';
                 $operationing->operation_type='update';
 
 
@@ -485,12 +460,12 @@ class PlatformController extends CommonController{
 
                 $data['self_id']            =generate_id('car_');
                 $data['group_code']         = $group_code;
-                $data['group_name']         = $group_name;
+
                 $data['create_user_id']     =$user_info->admin_id;
                 $data['create_user_name']   =$user_info->name;
                 $data['create_time']        =$data['update_time']=$now_time;
 
-                $id=TmsCar::insert($data);
+                $id=Car::insert($data);
                 $operationing->access_cause='新建车辆';
                 $operationing->operation_type='create';
 
@@ -521,6 +496,35 @@ class PlatformController extends CommonController{
             }
             return $msg;
         }
+    }
+
+    /**
+     * 删除车辆
+     * */
+    public function delCar(Request $request,Status $status){
+        $now_time=date('Y-m-d H:i:s',time());
+        $operationing = $request->get('operationing');//接收中间件产生的参数
+        $table_name='app_car';
+        $medol_name='AppCar';
+        $self_id=$request->input('self_id');
+        $flag='delFlag';
+//        $self_id='car_202012242220439016797353';
+
+        $status_info=$status->changeFlag($table_name,$medol_name,$self_id,$flag,$now_time);
+
+        $operationing->access_cause='删除';
+        $operationing->table=$table_name;
+        $operationing->table_id=$self_id;
+        $operationing->now_time=$now_time;
+        $operationing->old_info=$status_info['old_info'];
+        $operationing->new_info=$status_info['new_info'];
+        $operationing->operation_type=$flag;
+
+        $msg['code']=$status_info['code'];
+        $msg['msg']=$status_info['msg'];
+        $msg['data']=$status_info['new_info'];
+
+        return $msg;
     }
 
 
