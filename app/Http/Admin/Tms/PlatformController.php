@@ -466,7 +466,7 @@ class PlatformController extends CommonController{
                 $data['create_user_name']   =$user_info->name;
                 $data['create_time']        =$data['update_time']=$now_time;
 
-                $id=Car::insert($data);
+                $id=AppCar::insert($data);
                 $operationing->access_cause='新建车辆';
                 $operationing->operation_type='create';
 
