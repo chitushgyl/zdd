@@ -198,21 +198,11 @@ class OrderController extends Controller{
             $v->order_status_show=$pay_status[$v->order_status-1]['pay_status_text']??null;
             $v->order_type_show   = $tms_order_type[$v->order_type] ?? null;
             $v->self_id_show = substr($v->self_id,15);
-            $v->clod=json_decode($v->clod,true);
+
             $v->send_time = date('m-d H:i',strtotime($v->send_time));
-            $info_clod = $v->clod;
-            foreach ($info_clod as $key => $value){
-                $info_clod[$key]=$tms_control_type[$value];
-            }
-            $v->clod = $info_clod;
-            $temperture = $v->clod;
-            foreach ($temperture as $key => $value){
-                $temperture[$key] = $value;
-            }
-            $v->temperture = implode(',',$temperture);
 
             $v->picktime_show = '装车时间 '.$v->send_time;
-            $v->temperture_show ='温度 '.$v->clod[0];
+           
             $v->order_id_show = '订单编号'.substr($v->self_id,15);
             if ($v->order_status == 1){
                 $v->state_font_color = '#333';

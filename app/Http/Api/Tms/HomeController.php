@@ -8,7 +8,9 @@ use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
 use App\Models\Tms\TmsCarType;
+use App\Models\Tms\TmsConnact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 
 class HomeController extends Controller {
@@ -143,6 +145,100 @@ class HomeController extends Controller {
 
 
 
+    }
+
+    /*
+     * 联系客服
+     * */
+    public function customer_service(Request $request){
+        $operationing   = $request->get('operationing');//接收中间件产生的参数
+        $now_time       =date('Y-m-d H:i:s',time());
+        $table_name     ='tms_group';
+
+        $operationing->access_cause     ='创建/修改业务公司';
+        $operationing->table            =$table_name;
+        $operationing->operation_type   ='create';
+        $operationing->now_time         =$now_time;
+
+        $user_info = $request->get('user_info');//接收中间件产生的参数
+        $input              =$request->all();
+        /** 接收数据*/
+        $self_id            =$request->input('self_id');
+        $company_name       =$request->input('company_name');
+        $group_code         =$request->input('group_code');
+        $connact            =$request->input('connact');
+        $name       	    =$request->input('name');
+        $address            =$request->input('company_address');
+        $type               =$request->input('type');
+
+        /*** 虚拟数据
+        $input['self_id']           =$self_id='';
+        $input['company_name']      =$company_name='company_name';
+        $input['group_code']           =$group_code='group_code';
+        $input['connact']         =$connact     ='connact';
+        $input['name']              =$name   ='name';
+        $input['address']          =$address  ='company_address';
+        $input['type']             =$type  ='客户';
+         ***/
+//        dd($input);
+        $rules=[
+            'type'=>'required',
+            'name'=>'required',
+            'connact'=>'required',
+        ];
+        $message=[
+            'type.required'=>'请选择类型',
+            'name.required'=>'请填写姓名',
+            'connact.required'=>'请填写联系方式',
+        ];
+        $validator=Validator::make($input,$rules,$message);
+
+        if($validator->passes()){
+
+            $wheres['self_id'] = $self_id;
+            $old_info=TmsGroup::where($wheres)->first();
+
+            if($old_info){
+
+            }else{
+                $data['self_id']            = generate_id('company_');		//优惠券表ID
+                $data['company_name']       = $group_code;
+                $data['connact']            = $user_info->admin_id;
+                $data['group_code']         = $user_info->name;
+                $data['name']               = $data['update_time']=$now_time;
+                $data['type']      		    = $type;
+                $data['address']      		= $type;
+                $id=TmsConnact::insert($data);
+                $operationing->access_cause='新建联系客服';
+                $operationing->operation_type='create';
+
+            }
+
+            $operationing->table_id=$old_info?$self_id:$data['self_id'];
+            $operationing->old_info=$old_info;
+            $operationing->new_info=$data;
+            if($id){
+                $msg['code'] = 200;
+                $msg['msg'] = "操作成功";
+                return $msg;
+            }else{
+                $msg['code'] = 302;
+                $msg['msg'] = "操作失败";
+                return $msg;
+            }
+
+
+        }else{
+            //前端用户验证没有通过
+            $erro=$validator->errors()->all();
+            $msg['code']=300;
+            $msg['msg']=null;
+            foreach ($erro as $k => $v){
+                $kk=$k+1;
+                $msg['msg'].=$kk.'：'.$v.'</br>';
+            }
+            return $msg;
+        }
     }
 
 

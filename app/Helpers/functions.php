@@ -512,6 +512,26 @@ function direction($lat1, $lng1, $lat2, $lng2){
     return $res;
 }
 
+function directionc($lat1, $lng1, $lat2, $lng2){
+    if(empty($lat1) || empty($lng1) || empty($lat2) || empty($lng2)){
+        return '';
+    }
+    $ak ="SdRptW2rs3xsjHhVhQOy17QzP6Gexbp6";
+    $url = "http://api.map.baidu.com/direction/v2/driving?output=json&tactics=0&origin=".$lat1.",".$lng1."&destination=".$lat2.",".$lng2."&ak=".$ak;
+
+    $renderOption = file_get_contents($url);
+    $result = json_decode($renderOption,true);
+
+    if ($result['status'] == '1') {
+        $res['distance'] = $result['result']['routes'][0]['distance'];
+        $res['duration'] = $result['result']['routes'][0]['duration'];
+    }else{
+        $res='';
+    }
+
+    return $res;
+}
+
 function get_word($s0){
     $fchar = ord($s0{0});
     if($fchar >= ord("A") and $fchar <= ord("z") )return strtoupper($s0{0});

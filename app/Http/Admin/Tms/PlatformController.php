@@ -528,6 +528,15 @@ class PlatformController extends CommonController{
         return $msg;
     }
 
+    /**
+     * 获取城市地址
+     * */
+    public function getAddress(Request $request){
+//        https://restapi.amap.com/v3/config/district?keywords=北京&subdistrict=2&key=807cab15630979094c098adebadd5fec
+
+
+    }
+
 
 
 
