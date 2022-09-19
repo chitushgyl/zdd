@@ -2129,7 +2129,7 @@ class OrderController extends Controller{
             'line_send_qu','line_send_sheng_name','line_send_shi_name','line_send_qu_name','line_send_address','line_send_address_longitude','line_send_address_latitude','clod','pick_flag','send_flag',
             'pay_type','order_id','pay_status','pay_time','receiver_type','gather_name','gather_tel','send_name','send_tel','receipt_flag'
         ];
-//        $list_select = ['self_id','pay_type','order_id','pay_status','pay_time','receiver_type','order_status'];
+
         $where = [
             ['delete_flag','=','Y'],
             ['self_id','=',$self_id],
