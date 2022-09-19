@@ -202,7 +202,7 @@ class OrderController extends Controller{
             $v->send_time = date('m-d H:i',strtotime($v->send_time));
 
             $v->picktime_show = '装车时间 '.$v->send_time;
-           
+
             $v->order_id_show = '订单编号'.substr($v->self_id,15);
             if ($v->order_status == 1){
                 $v->state_font_color = '#333';
@@ -2180,15 +2180,9 @@ class OrderController extends Controller{
             $receipt_info = [];
             $receipt_info_list= [];
             foreach ($info->TmsOrderDispatch as $k =>$v){
-
                 $v->pay_type_show = $tms_pay_type[$v->pay_type]??null;
                 $v->good_info     = json_decode($v->good_info,true);
-                $temperture = json_decode($v->clod,true);
-                foreach ($temperture as $key => $value){
-                    $temperture[$key] = $tms_control_type[$value];
-                }
                 $info->receipt_flag = $v->receipt_flag;
-                $v->temperture = implode(',',$temperture);
                 if ($v->tmsReceipt){
 //                    $info->receipt = json_decode($v->tmsReceipt->receipt,true);
                     $receipt_info = img_for($v->tmsReceipt->receipt,'more');
@@ -2250,11 +2244,10 @@ class OrderController extends Controller{
                     $gather['good_number'] = $vvv['good_number'];
                     $gather['good_weight'] = $vvv['good_weight'];
                     $gather['good_volume'] = $vvv['good_volume'];
-                    $gather['good_cold']   = $vvv['clod_name'];
                     $gather['good_name']   = $vvv['good_name'];
                     $gather_info[] = $gather;
                 }
-                $vvv['clod'] =  $tms_control_type[$vvv['clod']];
+
                 if ($info->order_type == 'vehicle' || $info->order_type == 'lift'){
                     $order_info[$kkk]['good_weight'] = ($vvv['good_weight']/1000).'吨';
                 }
@@ -2289,41 +2282,24 @@ class OrderController extends Controller{
             $order_details4['name'] = '收货时间';
             $order_details4['value'] = $info->gather_time;
             $order_details4['color'] = '#000000';
-            if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
-                $order_details3['name'] = '装车时间';
-                $order_details3['value'] = $info->send_time;
-                $order_details3['color'] = '#000000';
-                $order_details5['name'] = '是否装卸';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要装货';
-                }else{
-                    $pick_flag_show = '不需装货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要卸货';
-                }else{
-                    $send_flag_show = '不需卸货';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
+
+            $order_details3['name'] = '装车时间';
+            $order_details3['value'] = $info->send_time;
+            $order_details3['color'] = '#000000';
+            $order_details5['name'] = '是否装卸';
+            if($info->pick_flag == 'Y'){
+                $pick_flag_show = '需要装货';
             }else{
-                $order_details3['name'] = '提货时间';
-                $order_details3['value'] = $info->send_time;
-                $order_details3['color'] = '#000000';
-                $order_details5['name'] = '是否提配';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要提货';
-                }else{
-                    $pick_flag_show = '不需提货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要配送';
-                }else{
-                    $send_flag_show = '不需配送';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
+                $pick_flag_show = '不需装货';
             }
+            if ($info->send_flag == 'Y'){
+                $send_flag_show = '需要卸货';
+            }else{
+                $send_flag_show = '不需卸货';
+            }
+            $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
+            $order_details5['color'] = '#000000';
+
             $order_details6['name'] = '订单备注';
             $order_details6['value'] = $info->remark;
             $order_details6['color'] = '#000000';
