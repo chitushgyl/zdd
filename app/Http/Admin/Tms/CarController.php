@@ -259,8 +259,8 @@ class CarController extends CommonController{
             $data['weight']            =$weight;
             $data['volam']             =$volam;
             $data['check_time']        =$check_time;
-            $data['license']           =$license;
-            $data['medallion']         =$medallion;
+            $data['license']           =img_for($license,'in');
+            $data['medallion']         =img_for($medallion,'in');
             $data['board_time']        =$board_time;
             $data['car_type_id']       =$info2->self_id;
             $data['car_type_name']     =$info2->parame_name;
