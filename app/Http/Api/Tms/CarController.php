@@ -20,7 +20,6 @@ class CarController extends Controller{
         $project_type       =$request->get('project_type');
         $total_user_id = $user_info->total_user_id;
         $tms_car_possess_type = array_column(config('tms.tms_car_possess_type'),'name','key');
-        $tms_control_type     = array_column(config('tms.tms_control_type'),'name','key');
         /**接收数据*/
         $num      = $request->input('num')??10;
         $page     = $request->input('page')??1;
@@ -43,8 +42,6 @@ class CarController extends Controller{
 
         foreach ($data['info'] as $k=>$v) {
 			$v->car_possess_show =  $tms_car_possess_type[$v->car_possess] ?? null;
-			$v->tms_control_type_show = $tms_control_type[$v->control] ?? null;
-
 
         }
         $msg['code'] = 200;
@@ -61,9 +58,8 @@ class CarController extends Controller{
         $self_id = $request->input('self_id');
 //        $self_id = 'car_20210313180835367958101';
         $tms_car_possess_type = array_column(config('tms.tms_car_possess_type'),'name','key');
-        $tms_control_type     = array_column(config('tms.tms_control_type'),'name','key');
+
 		$data['tms_car_possess_type'] = config('tms.tms_car_possess_type');
-        $data['tms_control_type']     = config('tms.tms_control_type');
         $where = [
             ['delete_flag','=','Y'],
             ['self_id','=',$self_id],
@@ -75,7 +71,6 @@ class CarController extends Controller{
         }])->where($where)->select($select)->first();
         if ($data['info']){
             $data['info']->car_possess_show =  $tms_car_possess_type[$data['info']->car_possess] ?? null;
-            $data['info']->tms_control_type_show = $tms_control_type[$data['info']->control] ?? null;
             $data['info']->license = img_for($data['info']->license,'more');
             $data['info']->medallion = img_for($data['info']->medallion,'more');
             $data['info']->car_type  = $data['info']->tmsCarType->parame_name;
@@ -104,7 +99,6 @@ class CarController extends Controller{
         $remark        = $request->input('remark');
         $weight        = $request->input('weight');
         $volam         = $request->input('volam');
-        $control       = $request->input('control');
         $board_time       = $request->input('board_time');
         $car_type_id   = $request->input('car_type_id');
         $contacts   = $request->input('contacts');
@@ -130,7 +124,6 @@ class CarController extends Controller{
             'car_number'=>'required',
             'car_type_id'=>'required',
             'car_possess'=>'required',
-            'control'=>'required',
             'contacts'=>'required',
             'tel'=>'required',
         ];
@@ -138,7 +131,6 @@ class CarController extends Controller{
             'car_number.required'=>'车牌号必须填写',
             'car_type_id.required'=>'车型必须选择',
             'car_possess.required'=>'车辆属性必须选择',
-            'control.required'=>'温控类型必须选择',
             'contacts.required'=>'请填写司机姓名',
             'tel.required'=>'请填写司机电话',
         ];
@@ -186,7 +178,6 @@ class CarController extends Controller{
             $data['remark']        = $remark;
             $data['weight']        = $weight;
             $data['volam']         = $volam;
-            $data['control']       = $control;
             $data['board_time']       = $board_time;
             $data['car_type_id']   = $info2->self_id;
             $data['car_type_name'] = $info2->parame_name;

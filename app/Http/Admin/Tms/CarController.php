@@ -42,7 +42,6 @@ class CarController extends CommonController{
         $group_info     = $request->get('group_info');//接收中间件产生的参数
         $button_info    = $request->get('anniu');//接收中间件产生的参数
         $tms_car_possess_type    =array_column(config('tms.tms_car_possess_type'),'name','key');
-        $tms_control_type    	 =array_column(config('tms.tms_control_type'),'name','key');
         /**接收数据*/
         $num            =$request->input('num')??10;
         $page           =$request->input('page')??1;
@@ -52,7 +51,7 @@ class CarController extends CommonController{
         $car_number     =$request->input('car_number');
         $car_type_name  =$request->input('car_type_name');
         $car_possess    =$request->input('car_possess');
-        $control        =$request->input('control');
+
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
@@ -63,7 +62,6 @@ class CarController extends CommonController{
             ['type'=>'like','name'=>'car_number','value'=>$car_number],
             ['type'=>'like','name'=>'car_brand','value'=>$car_brand],
             ['type'=>'=','name'=>'car_possess','value'=>$car_possess],
-            ['type'=>'=','name'=>'control','value'=>$control],
             ['type'=>'=','name'=>'car_type_name','value'=>$car_type_name]
         ];
 
@@ -96,12 +94,10 @@ class CarController extends CommonController{
                 $data['group_show']='Y';
                 break;
         }
-        // dd($data['items']->toArray());
 
         foreach ($data['items'] as $k=>$v) {
             $v->button_info=$button_info;
 			$v->car_possess_show=$tms_car_possess_type[$v->car_possess]??null;
-			$v->tms_control_type_show=$tms_control_type[$v->control]??null;
         }
 
 
@@ -119,11 +115,9 @@ class CarController extends CommonController{
     public function createCar(Request $request){
         /** 接收数据*/
         $self_id=$request->input('self_id');
-//        $self_id = 'car_20210313180835367958101';
 		$data['tms_car_possess_type']    =config('tms.tms_car_possess_type');
         $data['tms_control_type']    	 =config('tms.tms_control_type');
         $tms_car_possess_type    =array_column(config('tms.tms_car_possess_type'),'name','key');
-        $tms_control_type    	 =array_column(config('tms.tms_control_type'),'name','key');
         $where=[
             ['delete_flag','=','Y'],
             ['self_id','=',$self_id],
@@ -136,7 +130,6 @@ class CarController extends CommonController{
 
         if ($data['info']){
             $data['info']->car_possess_show=$tms_car_possess_type[$data['info']->car_possess]??null;
-            $data['info']->tms_control_type_show=$tms_control_type[$data['info']->control]??null;
             $data['info']->license = img_for($data['info']->license,'more');
             $data['info']->medallion = img_for($data['info']->medallion,'more');
             $data['info']->car_type  = $data['info']->tmsCarType->parame_name;
@@ -176,7 +169,6 @@ class CarController extends CommonController{
         $remark             =$request->input('remark');
         $weight             =$request->input('weight');
         $volam              =$request->input('volam');
-        $control            =$request->input('control');
         $check_time         =$request->input('check_time');
         $license            =$request->input('license');
         $medallion          =$request->input('medallion');
@@ -196,7 +188,6 @@ class CarController extends CommonController{
         $input['remark']            =$remark='GIUIUIT';
         $input['weight']            =$weight='GIUIUIT';
         $input['volam']             =$volam='GIUIUIT';
-        $input['control']           =$control='GIUIUIT';
         $input['check_time']        =$check_time='2020-01-02';
         $input['license']           =$license='GIUIUIT';
         $input['medallion']         =$medallion='GIUIUIT';
@@ -268,7 +259,6 @@ class CarController extends CommonController{
             $data['remark']            =$remark;
             $data['weight']            =$weight;
             $data['volam']             =$volam;
-            $data['control']           =$control;
             $data['check_time']        =$check_time;
             $data['license']           =$license;
             $data['medallion']         =$medallion;

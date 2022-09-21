@@ -143,8 +143,6 @@ class HomeController extends Controller {
         $msg['data'] = $info;
         return $msg;
 
-
-
     }
 
     /*
