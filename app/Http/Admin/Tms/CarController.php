@@ -116,7 +116,6 @@ class CarController extends CommonController{
         /** 接收数据*/
         $self_id=$request->input('self_id');
 		$data['tms_car_possess_type']    =config('tms.tms_car_possess_type');
-        $data['tms_control_type']    	 =config('tms.tms_control_type');
         $tms_car_possess_type    =array_column(config('tms.tms_car_possess_type'),'name','key');
         $where=[
             ['delete_flag','=','Y'],
@@ -179,7 +178,7 @@ class CarController extends CommonController{
 
 
         /*** 虚拟数据
-//        $input['self_id']         =$self_id='good_202007011336328472133661';
+        $input['self_id']         =$self_id='';
         $input['group_code']        =$group_code='1234';
         $input['car_brand']         =$car_brand='64';
         $input['car_number']        =$car_number='沪A45612';
@@ -192,7 +191,7 @@ class CarController extends CommonController{
         $input['license']           =$license='GIUIUIT';
         $input['medallion']         =$medallion='GIUIUIT';
         $input['board_time']        =$board_time='2020-05-06';
-        $input['car_type_id']       =$car_type_id='type_202101061323561478489954';
+        $input['car_type_id']       =$car_type_id='type_202102051755118039490396';
         $input['contacts']          =$contacts='haha';
         $input['tel']               =$tel='18564516123';
         **/

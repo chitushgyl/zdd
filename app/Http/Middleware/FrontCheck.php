@@ -33,7 +33,7 @@ class FrontCheck{
 
 		$user_token=$user_token??$mini_token;
 
-//        $user_token='72d0581f7b979e9ed60892692729b7d1';
+//        $user_token='7c8c15ad1a1058a0c4e627517d42fc4b';
 
         $token_where=[
             ['user_token','=',$user_token],

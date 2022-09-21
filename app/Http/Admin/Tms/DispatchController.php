@@ -829,9 +829,7 @@ class DispatchController extends CommonController{
             /** 对商品信息进行处理*/
 
             $good_info=json_decode($info->good_info,true);
-            foreach ($good_info as $k => $v){
-                $good_info[$k]['clod_show']=$tms_control_type[$v['clod']];
-            }
+
             $info->good_info_show=$good_info;
             if ($info->dispatch == 'N' && $info->on_line_flag == 'N'){
                 foreach ($info->tmsCarriageDispatch->tmsCarriage as $kk =>$vv){
