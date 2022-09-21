@@ -100,9 +100,6 @@ class BillController extends CommonController {
                 break;
         }
 
-//        dd($data['items']->toArray());
-//        dd($tms_order_status_type);
-
         foreach ($data['items'] as $k=>$v) {
             $v->total_money = number_format($v->total_money/100, 2);
             $v->total_money_show = $v->total_money;
@@ -120,20 +117,12 @@ class BillController extends CommonController {
 
             }
 
-            $v->clod=json_decode($v->clod,true);
-
-            $cold = $v->clod;
-            foreach ($cold as $key => $value){
-                $cold[$key] =$tms_control_type[$value];
-            }
-            $v->clod= $cold;
             if($v->order_type == 'vehicle'){
                 $v->picktime_show = '装车时间 '.$v->send_time;
             }else{
                 $v->picktime_show = '提货时间 '.$v->send_time;
             }
 
-            $v->temperture_show ='温度 '.$v->clod[0];
             $v->order_id_show = '订单编号'.substr($v->self_id,15);
             if ($v->order_status == 1){
                 $v->state_font_color = '#333';
@@ -173,7 +162,7 @@ class BillController extends CommonController {
                 $v->object_show = $v->userReg->tel;
             }
         }
-//        dd($data['items']);
+
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
         $msg['data']=$data;

@@ -252,7 +252,7 @@ class DispatchController extends CommonController{
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
         $app_status = $request->input('app_status');
-//        $input['group_code'] = $group_code =  '1234';
+
         $rules=[
             'group_code'=>'required',
         ];
@@ -301,7 +301,6 @@ class DispatchController extends CommonController{
                 ->orderBy('update_time','DESC')->get(); //总的数据量
             $data['total'] = TmsOrderDispatch::where($where)->where('dispatch_flag','Y')->whereIn('order_status',[2,3])->count();
             foreach ($data['info'] as $key => $value){
-//                dd($value);
                 $value->self_id_show = substr($value->self_id,15);
                 $value->on_line_money       = number_format($value->on_line_money/100, 2);
                 $value->total_money       = number_format($value->total_money/100, 2);
@@ -312,9 +311,6 @@ class DispatchController extends CommonController{
                     $value['good_info'] = json_decode($value['good_info'],true);
                     if (!empty($value['good_info'])) {
                         foreach ($value['good_info'] as $k => $v) {
-                            if ($v['clod']) {
-                                $v['clod'] = $tms_control_type[$v['clod']];
-                            }
                             $value['good_info_show'] .= $v['good_name'] . ',';
                         }
                     }
@@ -323,19 +319,12 @@ class DispatchController extends CommonController{
                         $value->car_type_show = $value->tmsCarType->parame_name;
                     }
                 }
-                $temperture = json_decode($value['clod'],true);
-                foreach ($temperture as $kkk => $vvv){
-                    $temperture[$kkk] = $tms_control_type[$vvv];
-                }
-                $value->temperture = implode(',',$temperture);
-
                 if($value->order_type == 'vehicle' || $value->order_type == 'lift'){
                     $value->picktime_show = '装车时间 '.$value->send_time;
                 }else{
                     $value->picktime_show = '提货时间 '.$value->send_time;
                 }
 
-                $value->temperture_show ='温度 '.$value->temperture;
                 $value->order_id_show = '订单编号'.substr($value->self_id,15);
                 if ($value->order_status == 1){
                     $value->state_font_color = '#333';

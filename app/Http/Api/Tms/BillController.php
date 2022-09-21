@@ -70,9 +70,8 @@ class BillController extends Controller{
             $v->order_type_show   = $tms_order_type[$v->order_type] ?? null;
             $v->self_id_show = substr($v->self_id,15);
             $v->send_time = date('m-d H:i',strtotime($v->send_time));
-            $temperture = $v->clod;
 
-            $v->temperture = implode(',',$temperture);
+
             if($v->order_type == 'vehicle'){
                 $v->picktime_show = '装车时间 '.$v->send_time;
             }else{

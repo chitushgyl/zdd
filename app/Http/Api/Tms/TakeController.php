@@ -48,7 +48,6 @@ class TakeController extends Controller{
 
         $carriage_flag    =array_column(config('tms.carriage_flag'),'name','key');
         $tms_order_type           =array_column(config('tms.tms_order_type'),'name','key');
-        $tms_control_type = array_column(config('tms.tms_control_type'),'name','key');
         $tms_line_type    = array_column(config('tms.tms_line_type'),'name','key');
         /**接收数据*/
         $num            =$request->input('num')??10;
@@ -99,11 +98,6 @@ class TakeController extends Controller{
             $v->order_type_show=$tms_order_type[$v->order_type]??null;
             $v->total_money = number_format($v->total_money/100);
             $v->on_line_money = number_format($v->on_line_money/100);
-            $temperture = json_decode($v->clod);
-            foreach ($temperture as $kk => $vv){
-                $temperture[$kk]    = $tms_control_type[$vv] ?? null;
-            }
-            $v->clod = implode(',',$temperture);
             $v->order_type       = $tms_line_type[$v->order_type] ?? null;
             $v->order_id_show    = substr($v->self_id,15);
             $v->send_time        = date('m-d H:i',strtotime($v->send_time));
@@ -116,7 +110,7 @@ class TakeController extends Controller{
             if ($v->tmsCarType){
                 $v->car_show = '车型 '.$v->tmsCarType->parame_name;
             }
-            $v->temperture_show = '温度 '.$v->clod;
+
             $v->background_color_show = '#0088F4';
             $v->text_color_show = '#000000';
             if($v->order_type == 'vehicle' || $v->order_type == 'lcl' || $v->order_type == 'lift'){
