@@ -821,16 +821,10 @@ class DispatchController extends CommonController{
             /** 如果需要对数据进行处理，请自行在下面对 $$info 进行处理工作*/
             $info->total_money=$info->total_money/100;
             $info->on_line_money=$info->on_line_money/100;
-            $info->clod=json_decode($info->clod,true);
             $info->order_type_show=$tms_order_type[$info->order_type];
             $info->order_status_show = $tms_order_status_type[$info->order_status] ?? null;
             $info->self_id_show = substr($info->self_id,15);
             $info->driver_price = 0;
-            $cold = $info->clod;
-            foreach ($cold as $key => $value){
-                $cold[$key] =$tms_control_type[$value];
-            }
-            $info->clod= $cold;
             $info->info = json_decode($info->info,true);
             /** 对商品信息进行处理*/
 
@@ -865,7 +859,6 @@ class DispatchController extends CommonController{
                 $receipt_info = img_for($info->tmsReceipt->receipt,'more');
                 $info->receipt = $receipt_info;
             }
-
             if($info->tmsCarriage){
                 $info->driver_price = $info->tmsCarriage->total_money;
             }
@@ -899,46 +892,26 @@ class DispatchController extends CommonController{
             $order_details4['name'] = '收货时间';
             $order_details4['value'] = $info->gather_time;
             $order_details4['color'] = '#000000';
-            if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
-                $order_details3['name'] = '装车时间';
-                $order_details3['value'] = $info->send_time;
-                $order_details3['color'] = '#000000';
-                $order_details5['name'] = '是否装卸';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要装货';
-                }else{
-                    $pick_flag_show = '不需装货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要卸货';
-                }else{
-                    $send_flag_show = '不需卸货';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
-            }else{
 
-                $order_details5['name'] = '是否提配';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要提货';
-                }else{
-                    $pick_flag_show = '不需提货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要配送';
-                }else{
-                    $send_flag_show = '不需配送';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
+            $order_details3['name'] = '装车时间';
+            $order_details3['value'] = $info->send_time;
+            $order_details3['color'] = '#000000';
+            $order_details5['name'] = '是否装卸';
+            if($info->pick_flag == 'Y'){
+                $pick_flag_show = '需要装货';
+            }else{
+                $pick_flag_show = '不需装货';
             }
+            if ($info->send_flag == 'Y'){
+                $send_flag_show = '需要卸货';
+            }else{
+                $send_flag_show = '不需卸货';
+            }
+            $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
+            $order_details5['color'] = '#000000';
             $order_details6['name'] = '订单备注';
             $order_details6['value'] = $info->remark;
             $order_details6['color'] = '#000000';
-//            $order_details7['name'] = '班次号';
-//            $order_details7['value'] = $info->shift_number;
-//            $order_details8['name'] = '时效';
-//            $order_details8['value'] = $info->trunking;
 
             $order_details9['name'] = '运输信息';
             $order_details9['value'] = $info->car_info;

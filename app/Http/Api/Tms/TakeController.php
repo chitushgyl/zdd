@@ -172,26 +172,17 @@ class TakeController extends Controller{
             $info->total_money=number_format($info->total_money/100,2);
             $info->on_line_money=number_format($info->on_line_money/100,2);
             $info->good_info=json_decode($info->good_info,true);
-            $info->clod=json_decode($info->clod,true);
             $info->info=json_decode($info->info,true);
             $info->order_type_show=$tms_order_type[$info->order_type]??null;
             $info->pay_type_show = $tms_pay_type[$info->pay_type]??null;
-            $info_clod = $info->clod;
             $info->self_id_show  = substr($info->self_id,15);
-            foreach ($info_clod as $key => $value){
-                $info_clod[$key]=$tms_control_type[$value]??null;
-            }
-            $info->clod = $info_clod;
+
             $info_good_info = $info->good_info;
             foreach ($info_good_info as $k => $v){
                 $info_good_info[$k]['clod']=$tms_control_type[$v['clod']]??null;
             }
             $info->good_info = $info_good_info;
 
-            $temperture = $info->clod;
-            foreach ($temperture as $key => $value){
-                $temperture[$key] = $value;
-            }
             $car_list = [];
             if ($info->tmsCarriageDispatch){
                 if ($info->tmsCarriageDispatch->tmsCarriageDriver){
@@ -205,7 +196,7 @@ class TakeController extends Controller{
                 }
 
             }
-            $info->temperture = implode(',',$temperture);
+
             if ($info->tmsReceipt){
                 $receipt_info = img_for($info->tmsReceipt->receipt,'more');
                 $info->receipt = $receipt_info;
@@ -233,48 +224,27 @@ class TakeController extends Controller{
             $order_details4['name'] = '收货时间';
             $order_details4['value'] = $info->gather_time;
             $order_details4['color'] = '#000000';
-            if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
-                $order_details3['name'] = '装车时间';
-                $order_details3['value'] = $info->send_time;
-                $order_details3['color'] = '#000000';
-                $order_details5['name'] = '是否装卸';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要装货';
-                }else{
-                    $pick_flag_show = '不需装货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要卸货';
-                }else{
-                    $send_flag_show = '不需卸货';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
+
+            $order_details3['name'] = '装车时间';
+            $order_details3['value'] = $info->send_time;
+            $order_details3['color'] = '#000000';
+            $order_details5['name'] = '是否装卸';
+            if($info->pick_flag == 'Y'){
+                $pick_flag_show = '需要装货';
             }else{
-                $order_details3['name'] = '提货时间';
-                $order_details3['value'] = $info->send_time;
-                $order_details5['color'] = '#000000';
-                $order_details5['name'] = '是否提配';
-                if($info->pick_flag == 'Y'){
-                    $pick_flag_show = '需要提货';
-                }else{
-                    $pick_flag_show = '不需提货';
-                }
-                if ($info->send_flag == 'Y'){
-                    $send_flag_show = '需要配送';
-                }else{
-                    $send_flag_show = '不需配送';
-                }
-                $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
-                $order_details5['color'] = '#000000';
+                $pick_flag_show = '不需装货';
             }
+            if ($info->send_flag == 'Y'){
+                $send_flag_show = '需要卸货';
+            }else{
+                $send_flag_show = '不需卸货';
+            }
+            $order_details5['value'] = $pick_flag_show.' '.$send_flag_show;
+            $order_details5['color'] = '#000000';
+
             $order_details6['name'] = '订单备注';
             $order_details6['value'] = $info->remark;
             $order_details6['color'] = '#000000';
-//            $order_details7['name'] = '班次号';
-//            $order_details7['value'] = $info->shift_number;
-//            $order_details8['name'] = '时效';
-//            $order_details8['value'] = $info->trunking;
 
             $order_details9['name'] = '运输信息';
             $order_details9['value'] = $info->car_info;
@@ -283,7 +253,7 @@ class TakeController extends Controller{
             $order_details10['value'] = $info->receipt;
 
             $order_details[] = $order_details1;
-//            $order_details[]= $order_details2;
+
 
             if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
                 if ($info->kilometre){
@@ -294,8 +264,7 @@ class TakeController extends Controller{
                 $order_details[]= $order_details5;
                 $order_details[]= $order_details6;
             }else{
-//                $order_details[]= $order_details7;
-//                $order_details[]= $order_details8;
+
                 $order_details[]= $order_details3;
                 $order_details[]= $order_details4;
                 $order_details[]= $order_details5;
