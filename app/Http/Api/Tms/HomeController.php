@@ -200,12 +200,14 @@ class HomeController extends Controller {
 
             }else{
                 $data['self_id']            = generate_id('company_');		//优惠券表ID
-                $data['company_name']       = $group_code;
-                $data['connact']            = $user_info->admin_id;
-                $data['group_code']         = $user_info->name;
-                $data['name']               = $data['update_time']=$now_time;
+                $data['company_name']       = $company_name;
+                $data['connact']            = $connact;
+                $data['group_code']         = $group_code;
+                $data['name']               = $name;
                 $data['type']      		    = $type;
-                $data['address']      		= $type;
+                $data['address']      		= $address;
+                $data['create_time']        = $data['update_time']	= $now_time;
+                $data['address']      		= $address;
                 $id=TmsConnact::insert($data);
                 $operationing->access_cause='新建联系客服';
                 $operationing->operation_type='create';
