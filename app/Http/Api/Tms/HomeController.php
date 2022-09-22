@@ -149,14 +149,8 @@ class HomeController extends Controller {
      * 联系客服
      * */
     public function customer_service(Request $request){
-        $operationing   = $request->get('operationing');//接收中间件产生的参数
         $now_time       =date('Y-m-d H:i:s',time());
         $table_name     ='tms_group';
-
-        $operationing->access_cause     ='创建/修改业务公司';
-        $operationing->table            =$table_name;
-        $operationing->operation_type   ='create';
-        $operationing->now_time         =$now_time;
 
         $user_info = $request->get('user_info');//接收中间件产生的参数
         $input              =$request->all();
@@ -209,14 +203,9 @@ class HomeController extends Controller {
                 $data['create_time']        = $data['update_time']	= $now_time;
                 $data['address']      		= $address;
                 $id=TmsConnact::insert($data);
-                $operationing->access_cause='新建联系客服';
-                $operationing->operation_type='create';
-
+                
             }
 
-            $operationing->table_id=$old_info?$self_id:$data['self_id'];
-            $operationing->old_info=$old_info;
-            $operationing->new_info=$data;
             if($id){
                 $msg['code'] = 200;
                 $msg['msg'] = "操作成功";
