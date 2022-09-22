@@ -194,7 +194,7 @@ class HomeController extends Controller {
         if($validator->passes()){
 
             $wheres['self_id'] = $self_id;
-            $old_info=TmsGroup::where($wheres)->first();
+            $old_info=TmsConnact::where($wheres)->first();
 
             if($old_info){
 
