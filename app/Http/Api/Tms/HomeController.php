@@ -4,6 +4,7 @@ namespace App\Http\Api\Tms;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DetailsController as Details;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
@@ -57,7 +58,6 @@ class HomeController extends Controller {
 
           foreach ($data['info'] as $k=>$v) {
               $v->car_possess_show =  $tms_car_possess_type[$v->car_possess] ?? null;
-              $v->tms_control_type_show = $tms_control_type[$v->control] ?? null;
 
 
           }
@@ -126,16 +126,16 @@ class HomeController extends Controller {
             ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
         ];
         $where=get_list_where($search);
-        $select = [];
+        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name'];
         $select1 = ['self_id','parame_name'];
         $info = AppCar::with(['tmsCarType'=>function($query)use($select1){
             $query->select($select1);
         }])->where($where)->select($select)->get();
 
         if($info){
-            foreach($info as $k => $v){
-                $v->picture = img_for($v->picture,'more');
-            }
+//            foreach($info as $k => $v){
+//
+//            }
         }
 
         $msg['code'] = 200;
@@ -143,6 +143,31 @@ class HomeController extends Controller {
         $msg['data'] = $info;
         return $msg;
 
+    }
+
+    /**
+     * 车辆详情
+     * */
+    public function carView(Request $request,Details $details){
+        $self_id    = $request->input('self_id');
+        $table_name = 'app_car';
+        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name','picture'];
+        // $self_id = 'car_202101111749191839630920';
+        $info = $details->details($self_id,$table_name,$select);
+
+        if($info) {
+            /** 如果需要对数据进行处理，请自行在下面对 $$info 进行处理工作*/
+            $info->picture = img_for($info->picture,'more');
+            $data['info'] = $info;
+            $msg['code']  = 200;
+            $msg['msg']   = "数据拉取成功";
+            $msg['data']  = $data;
+            return $msg;
+        }else{
+            $msg['code'] = 300;
+            $msg['msg']  = "没有查询到数据";
+            return $msg;
+        }
     }
 
     /*
