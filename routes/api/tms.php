@@ -285,5 +285,7 @@ Route::group([
     Route::any('/home/getCarousel','HomeController@getCarousel');
     Route::any('/home/getCar','HomeController@getCar');
     Route::any('/home/customer_service','HomeController@customer_service');//联系客服
+    Route::any('/home/getCars','HomeController@getCars');//联系客服
+    Route::any('/home/carList','HomeController@carList');//联系客服
 });
 
