@@ -585,6 +585,10 @@ class PlatformController extends CommonController{
                 $data['address']    =$address;
                 $data['lat']        =$lat;
                 $data['lnt']        =$lnt;
+                $data['name']       =$name;
+                $data['open_time']  =$open_time;
+                $data['picture']    =img_for($picture,'more');
+                $data['view']       =$view;
                 $id=ChargeAddress::where($wheres)->update($data);
 
                 $operationing->access_cause='修改充电桩地址';

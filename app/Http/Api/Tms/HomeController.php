@@ -257,7 +257,7 @@ class HomeController extends Controller {
     }
 
     /**
-     * 优惠充电
+     * 优惠充电 /api/home/getChargeAddress
      * */
     public function getChargeAddress(Request $request){
         $user_info     = $request->get('user_info');//接收中间件产生的参数
