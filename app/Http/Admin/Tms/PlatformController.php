@@ -634,6 +634,116 @@ class PlatformController extends CommonController{
         }
     }
 
+    /**
+     * 充电桩地址列表 /tms/platform/chargeAddressList
+     * */
+    public function chargeAddressList(Request $request){
+        $data['page_info']      =config('page.listrows');
+        $data['button_info']    =$request->get('anniu');
+
+        $abc='车辆品牌';
+        $data['import_info']    =[
+
+        ];
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
+    /**
+     * 充电桩地址列表 /tms/platform/chargeAddressPage
+     * */
+    public function chargeAddressPage(Request $request){
+        /** 接收中间件参数**/
+        $group_info     = $request->get('group_info');//接收中间件产生的参数
+        $button_info    = $request->get('anniu');//接收中间件产生的参数
+
+        /**接收数据*/
+        $num            =$request->input('num')??10;
+        $page           =$request->input('page')??1;
+        $name           =$request->input('name');
+        $address        =$request->input('address');
+        $listrows       =$num;
+        $firstrow       =($page-1)*$listrows;
+
+        $search=[
+            ['type'=>'like','name'=>'name','value'=>$name],
+            ['type'=>'like','name'=>'address','value'=>$address],
+        ];
+
+        $where=get_list_where($search);
+
+        $select=['self_id','name','address','open_time','view','picture','lat','lnt','create_time'];
+        switch ($group_info['group_id']){
+            case 'all':
+                $data['total']=ChargeAddress::where($where)->count(); //总的数据量
+                $data['items']=ChargeAddress::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+
+            case 'one':
+                $where[]=['group_code','=',$group_info['group_code']];
+                $data['total']=ChargeAddress::where($where)->count(); //总的数据量
+                $data['items']=ChargeAddress::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='N';
+                break;
+
+            case 'more':
+                $data['total']=ChargeAddress::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
+                $data['items']=ChargeAddress::where($where)->whereIn('group_code',$group_info['group_code'])
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+        }
+
+        foreach ($data['items'] as $k=>$v) {
+                 $v->picture = img_for($v->picture,'more');
+        }
+
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
+    /**
+     * 删除充电桩地址  /tms/platform/delChargeAddress
+     * */
+    public function delChargeAddress(Request $request,Status $status){
+        $now_time=date('Y-m-d H:i:s',time());
+        $operationing = $request->get('operationing');//接收中间件产生的参数
+        $table_name='charge_address';
+        $medol_name='ChargeAddress';
+        $self_id=$request->input('self_id');
+        $flag='delFlag';
+//        $self_id='car_202012242220439016797353';
+
+        $status_info=$status->changeFlag($table_name,$medol_name,$self_id,$flag,$now_time);
+
+        $operationing->access_cause='删除';
+        $operationing->table=$table_name;
+        $operationing->table_id=$self_id;
+        $operationing->now_time=$now_time;
+        $operationing->old_info=$status_info['old_info'];
+        $operationing->new_info=$status_info['new_info'];
+        $operationing->operation_type=$flag;
+
+        $msg['code']=$status_info['code'];
+        $msg['msg']=$status_info['msg'];
+        $msg['data']=$status_info['new_info'];
+
+        return $msg;
+    }
+
+
 
 
 
