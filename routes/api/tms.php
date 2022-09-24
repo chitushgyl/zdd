@@ -288,5 +288,6 @@ Route::group([
     Route::any('/home/getCars','HomeController@getCars');//联系客服
     Route::any('/home/carList','HomeController@carList');//联系客服
     Route::any('/home/carView','HomeController@carView');//联系客服
+    Route::any('/home/getChargeAddress','HomeController@getChargeAddress');//获取充电桩地址
 });
 

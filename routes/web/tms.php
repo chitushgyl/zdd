@@ -367,6 +367,7 @@ Route::group([
     Route::any('/platform/brandList','PlatformController@brandList');
     Route::any('/platform/brandPage','PlatformController@brandPage');
     Route::any('/platform/getAddress','PlatformController@getAddress');
+    Route::any('/platform/addChargeAddress','PlatformController@addChargeAddress');//添加充电桩地址
 });
 
 

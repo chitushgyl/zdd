@@ -265,7 +265,7 @@ class HomeController extends Controller {
         //接收数据
         $address     = $request->input('address');
         $name     = $request->input('name');
-        
+
         $search = [
             ['type'=>'like','name'=>'address','value'=>$address],
             ['type'=>'like','name'=>'name','value'=>$name],
