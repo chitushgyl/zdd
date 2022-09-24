@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailsController as Details;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
+use App\Models\Tms\ChargeAddress;
 use App\Models\Tms\TmsCarType;
 use App\Models\Tms\TmsConnact;
 use Illuminate\Http\Request;
@@ -253,6 +254,36 @@ class HomeController extends Controller {
             }
             return $msg;
         }
+    }
+
+    /**
+     * 优惠充电
+     * */
+    public function getChargeAddress(Request $request){
+        $user_info     = $request->get('user_info');//接收中间件产生的参数
+        $project_type       =$request->get('project_type');
+        //接收数据
+        $address     = $request->input('address');
+        $name     = $request->input('name');
+        
+        $search = [
+            ['type'=>'like','name'=>'address','value'=>$address],
+            ['type'=>'like','name'=>'name','value'=>$name],
+        ];
+        $where=get_list_where($search);
+        $select = ['self_id','name','address','open_time','view','picture','lat','lnt','create_time'];
+        $info = ChargeAddress::where($where)->select($select)->get();
+
+        if($info){
+            foreach($info as $k => $v){
+                $v->picture = img_for($v->picture,'more');
+            }
+        }
+
+        $msg['code'] = 200;
+        $msg['msg']  = "数据拉取成功";
+        $msg['data'] = $info;
+        return $msg;
     }
 
 

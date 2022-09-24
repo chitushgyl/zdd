@@ -7,6 +7,7 @@ use App\Http\Controllers\CommonController;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
+use App\Models\Tms\ChargeAddress;
 use App\Models\Tms\TmsCarType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -535,6 +536,102 @@ class PlatformController extends CommonController{
 //        https://restapi.amap.com/v3/config/district?keywords=北京&subdistrict=2&key=807cab15630979094c098adebadd5fec
 
 
+    }
+
+    /**
+     * 添加充电桩地址  /tms/platform/addChargeAddress
+     * */
+    public function addChargeAddress(Request $request){
+        $operationing   = $request->get('operationing');//接收中间件产生的参数
+        $now_time       =date('Y-m-d H:i:s',time());
+        $table_name     ='charge_address';
+        $operationing->access_cause     ='创建/修改充电桩地址';
+        $operationing->table            =$table_name;
+        $operationing->operation_type   ='create';
+        $operationing->now_time         =$now_time;
+        $operationing->type             ='add';
+        $user_info                      = $request->get('user_info');//接收中间件产生的参数
+        $input                          =$request->all();
+
+        /** 接收数据*/
+        $self_id            =$request->input('self_id');
+        $name               =$request->input('name');
+        $address            =$request->input('address');
+        $open_time          =$request->input('open_time');
+        $view               =$request->input('view');
+        $picture            =$request->input('picture');
+        $lat                =$request->input('lat');
+        $lnt                =$request->input('lnt');
+
+
+        /*** 虚拟数据
+        //        $input['self_id']         =$self_id='good_202007011336328472133661';
+        //        $input['brand']           =$brand='good_202007011336328472133661';
+         **/
+        $rules=[
+            'address'=>'required',
+        ];
+        $message=[
+            'address.required'=>'请填写充电桩地址',
+        ];
+
+        $validator=Validator::make($input,$rules,$message);
+        if($validator->passes()) {
+            $wheres['self_id'] = $self_id;
+            $old_info=ChargeAddress::where($wheres)->first();
+
+            if($old_info){
+                $data['update_time']=$now_time;
+                $data['address']    =$address;
+                $data['lat']        =$lat;
+                $data['lnt']        =$lnt;
+                $id=ChargeAddress::where($wheres)->update($data);
+
+                $operationing->access_cause='修改充电桩地址';
+                $operationing->operation_type='update';
+
+            }else{
+                $data['self_id']            =generate_id('charge_');
+                $data['name']               =$name;
+                $data['address']            =$address;
+                $data['open_time']          =$open_time;
+                $data['view']               =$view;
+                $data['picture']            =img_for($picture,'more');
+                $data['lat']                =$lat;
+                $data['lnt']                =$lnt;
+                $data['create_time']        =$data['update_time']=$now_time;
+
+                $id=ChargeAddress::insert($data);
+                $operationing->access_cause='新建充电桩地址';
+                $operationing->operation_type='create';
+
+            }
+
+            $operationing->table_id=$old_info?$self_id:$data['self_id'];
+            $operationing->old_info=$old_info;
+            $operationing->new_info=$data;
+
+            if($id){
+                $msg['code'] = 200;
+                $msg['msg'] = "操作成功";
+                return $msg;
+            }else{
+                $msg['code'] = 302;
+                $msg['msg'] = "操作失败";
+                return $msg;
+            }
+
+        }else{
+            //前端用户验证没有通过
+            $erro=$validator->errors()->all();
+            $msg['code']=300;
+            $msg['msg']=null;
+            foreach ($erro as $k => $v){
+                $kk=$k+1;
+                $msg['msg'].=$kk.'：'.$v.'</br>';
+            }
+            return $msg;
+        }
     }
 
 
