@@ -622,5 +622,35 @@ function dateTime(){
     return $date;
 }
 
+/**
+ * tree
+ * */
+function list_to_tree($list)
+{
+    $tree = array();// 创建Tree
+
+    if(is_array($list)) {
+        // 创建基于主键的数组引用
+        $refer = array();
+        foreach ($list as $key => $data) {
+            $refer[$data['id']] =& $list[$key];
+        }
+        foreach ($list as $key => $data) {
+            // 判断是否存在parent
+            $parentId =  $data['pid'];
+            if (0 == $parentId) {
+                $tree[] =& $list[$key];
+            }else{
+                if (isset($refer[$parentId])) {
+                    $parent =& $refer[$parentId];
+                    $parent['son'][] =& $list[$key];
+                    $parent['son'][$key]['name'] =& '--'.$list[$key]['name'];
+                }
+            }
+        }
+    }
+    return $tree;
+}
+
 
 ?>

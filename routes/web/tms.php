@@ -371,6 +371,8 @@ Route::group([
     Route::any('/platform/chargeAddressList','PlatformController@chargeAddressList');//充电桩地址列表头部
     Route::any('/platform/chargeAddressPage','PlatformController@chargeAddressPage');//充电桩地址列表
     Route::any('/platform/delChargeAddress','PlatformController@delChargeAddress');//删除充电桩地址
+    Route::any('/platform/addType','PlatformController@addType');//添加车辆配置
+    Route::any('/platform/getType','PlatformController@getType');//添加车辆配置
 });
 
 

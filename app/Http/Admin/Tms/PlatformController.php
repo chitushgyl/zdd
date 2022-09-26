@@ -8,6 +8,7 @@ use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
 use App\Models\Tms\ChargeAddress;
+use App\Models\Tms\InfiniteType;
 use App\Models\Tms\TmsCarType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -754,10 +755,132 @@ class PlatformController extends CommonController{
     }
 
     /**
-     * 添加分类
+     * 分类列表
+     * */
+    public function typePage(Request $request){
+
+    }
+
+    /**
+     * 添加分类  /tms/platform/addType
      * */
     public function addType(Request $request){
+        $operationing   = $request->get('operationing');//接收中间件产生的参数
+        $now_time       =date('Y-m-d H:i:s',time());
+        $table_name     ='charge_address';
+        $operationing->access_cause     ='创建/修改充电桩地址';
+        $operationing->table            =$table_name;
+        $operationing->operation_type   ='create';
+        $operationing->now_time         =$now_time;
+        $operationing->type             ='add';
+        $user_info                      = $request->get('user_info');//接收中间件产生的参数
+        $input                          =$request->all();
 
+        /** 接收数据*/
+        $self_id            = $request->input('self_id');
+        $name               = $request->input('name');
+        $pid                = $request->input('pid');
+        $level              = $request->input('level');
+        $sort               = $request->input('sort');
+        $normal_flag        = $request->input('normal_flag');
+
+
+        /*** 虚拟数据
+                $input['self_id']        = $self_id ='';
+                $input['name']           = $name    ='外形尺寸';
+                $input['pid']            = $pid     ='1';
+                $input['level']          = $level   ='1';
+                $input['sort']           = $sort    ='1';
+                $input['normal_flag']    = $normal_flag    ='4865x1715x2060';
+         **/
+        $rules=[
+            'name'=>'required',
+            'pid'=>'required',
+        ];
+        $message=[
+            'name.required'=>'名称不能为空',
+            'pid.required'=>'分类不能为空',
+        ];
+
+        $validator=Validator::make($input,$rules,$message);
+        if($validator->passes()) {
+            $wheres['self_id'] = $self_id;
+            $old_info=InfiniteType::where($wheres)->first();
+
+            if($old_info){
+                $data['update_time']= $now_time;
+                $data['name']       = $name;
+                $data['pid']        = $pid;
+                $data['level']      = $level;
+                $data['sort']       = $sort;
+                $data['normal_flag']        =$normal_flag;
+
+                $id=InfiniteType::where($wheres)->update($data);
+
+                $operationing->access_cause='修改充电桩地址';
+                $operationing->operation_type='update';
+
+            }else{
+                $data['self_id']            =generate_id('type_');
+                $data['name']               =$name;
+                $data['pid']                =$pid;
+                $data['level']              =$level;
+                $data['sort']               =$sort;
+                $data['normal_flag']        =$normal_flag;
+                $data['create_time']        =$data['update_time']=$now_time;
+
+                $id=InfiniteType::insert($data);
+                $operationing->access_cause='新建充电桩地址';
+                $operationing->operation_type='create';
+
+            }
+
+            $operationing->table_id=$old_info?$self_id:$data['self_id'];
+            $operationing->old_info=$old_info;
+            $operationing->new_info=$data;
+
+            if($id){
+                $msg['code'] = 200;
+                $msg['msg'] = "操作成功";
+                return $msg;
+            }else{
+                $msg['code'] = 302;
+                $msg['msg'] = "操作失败";
+                return $msg;
+            }
+
+        }else{
+            //前端用户验证没有通过
+            $erro=$validator->errors()->all();
+            $msg['code']=300;
+            $msg['msg']=null;
+            foreach ($erro as $k => $v){
+                $kk=$k+1;
+                $msg['msg'].=$kk.'：'.$v.'</br>';
+            }
+            return $msg;
+        }
+    }
+
+    /**
+     * 获取分类数据
+     * */
+    public function getType(Request $request){
+//        $result = InfiniteType::with('allChildren')->orderBy('sort','asc')->get();
+//        dd($result->toArray());
+
+        $where=[
+            ['delete_flag','=','Y'],
+            ['use_flag','=','Y'],
+        ];
+        $result = InfiniteType::where($where)->orderBy('sort','asc')->get()->toArray();
+        $res = list_to_tree($result);
+//        dd($res);
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$res;
+        return $msg;
     }
 
 
