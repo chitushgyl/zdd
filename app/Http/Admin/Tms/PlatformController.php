@@ -600,7 +600,7 @@ class PlatformController extends CommonController{
                 $data['address']            =$address;
                 $data['open_time']          =$open_time;
                 $data['view']               =$view;
-                $data['picture']            =img_for($picture,'more');
+                $data['picture']            =img_for($picture,'in');
                 $data['lat']                =$lat;
                 $data['lnt']                =$lnt;
                 $data['create_time']        =$data['update_time']=$now_time;
@@ -745,6 +745,13 @@ class PlatformController extends CommonController{
         $msg['data']=$status_info['new_info'];
 
         return $msg;
+    }
+
+    /**
+     * 添加分类
+     * */
+    public function addType(Request $request){
+
     }
 
 
