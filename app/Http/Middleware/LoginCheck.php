@@ -26,7 +26,7 @@ class LoginCheck{
         $user_token=$request->header('dtoken');
 //        $user_token='1bfe7d8f5a656830f7442bed87eece3f';             //超级管理员
 //        $user_token='ea8d7f618cd0457bc0eb6f8eebc1f85a';             //集团总公司账号
-//        $user_token='f3c6e770471f1d6425eed404a9a3485d';             //集团分公司的账号
+//        $user_token='530cfecff3c8045e48b62392f9c79133';             //集团分公司的账号
 
         $user_info=null;
         /**查询出这个用户的信息出来**/

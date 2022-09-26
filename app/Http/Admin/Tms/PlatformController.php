@@ -721,13 +721,13 @@ class PlatformController extends CommonController{
     /**
      * 删除充电桩地址  /tms/platform/delChargeAddress
      * */
-    public function delChargeAddress(Request $request,Status $status){
+    public function delChargeAddress(Request $request){
         $now_time=date('Y-m-d H:i:s',time());
         $operationing = $request->get('operationing');//接收中间件产生的参数
         $table_name='charge_address';
         $self_id=$request->input('self_id');
         $flag='delete_flag';
-
+//        $self_id = 'charge_202209241459564105870102';
         $old_info = ChargeAddress::where('self_id',$self_id)->select('self_id','address','use_flag','delete_flag','update_time')->first();
         $update['delete_flag'] = 'N';
         $update['update_time'] = $now_time;
