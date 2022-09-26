@@ -675,11 +675,12 @@ class PlatformController extends CommonController{
         $search=[
             ['type'=>'like','name'=>'name','value'=>$name],
             ['type'=>'like','name'=>'address','value'=>$address],
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
         ];
 
         $where=get_list_where($search);
 
-        $select=['self_id','name','address','open_time','view','picture','lat','lnt','create_time'];
+        $select=['self_id','name','address','open_time','view','picture','lat','lnt','create_time','use_flag','delete_flag'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=ChargeAddress::where($where)->count(); //总的数据量
@@ -708,7 +709,7 @@ class PlatformController extends CommonController{
         }
 
         foreach ($data['items'] as $k=>$v) {
-                 $v->picture = img_for($v->picture,'more');
+            $v->picture = img_for($v->picture,'more');
         }
 
 
