@@ -348,6 +348,87 @@ class PlatformController extends CommonController{
         return $msg;
     }
 
+    /**
+     * 车辆列表头部
+     * */
+    public function carList(Request $request){
+        $data['page_info']      =config('page.listrows');
+        $data['button_info']    =$request->get('anniu');
+
+        $abc='车辆';
+        $data['import_info']    =[
+            'import_text'=>'下载'.$abc.'导入示例文件',
+            'import_color'=>'#FC5854',
+            'import_url'=>config('aliyun.oss.url').'execl/2020-07-02/TMS车辆导入文件范本.xlsx',
+        ];
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
+    /**
+     *车辆列表
+     * */
+    public function carPage(Request $request){
+        /** 接收中间件参数**/
+        $group_info     = $request->get('group_info');//接收中间件产生的参数
+        $button_info    = $request->get('anniu');//接收中间件产生的参数
+
+        /**接收数据*/
+        $num            =$request->input('num')??10;
+        $page           =$request->input('page')??1;
+        $use_flag       =$request->input('use_flag');
+        $listrows       =$num;
+        $firstrow       =($page-1)*$listrows;
+
+        $search=[
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'all','name'=>'use_flag','value'=>$use_flag],
+        ];
+
+        $where=get_list_where($search);
+
+        $select=['self_id','brand','type','car_type','price','view','car_name','picture','delete_flag','use_flag'];
+        switch ($group_info['group_id']){
+            case 'all':
+                $data['total']=AppCar::where($where)->count(); //总的数据量
+                $data['items']=AppCar::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+
+            case 'one':
+                $where[]=['group_code','=',$group_info['group_code']];
+                $data['total']=AppCar::where($where)->count(); //总的数据量
+                $data['items']=AppCar::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='N';
+                break;
+
+            case 'more':
+                $data['total']=AppCar::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
+                $data['items']=AppCar::where($where)->whereIn('group_code',$group_info['group_code'])
+                    ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+        }
+
+        foreach ($data['items'] as $k=>$v) {
+
+        }
+
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
     /*
      * 添加车辆
      * */
@@ -758,7 +839,61 @@ class PlatformController extends CommonController{
      * 分类列表
      * */
     public function typePage(Request $request){
+        /** 接收中间件参数**/
+        $group_info     = $request->get('group_info');//接收中间件产生的参数
+        $button_info    = $request->get('anniu');//接收中间件产生的参数
 
+        /**接收数据*/
+        $num            =$request->input('num')??10;
+        $page           =$request->input('page')??1;
+        $name           =$request->input('name');
+        $address        =$request->input('address');
+        $listrows       =$num;
+        $firstrow       =($page-1)*$listrows;
+
+        $search=[
+            ['type'=>'like','name'=>'name','value'=>$name],
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+        ];
+
+        $where=get_list_where($search);
+
+        $select=['self_id','name','pid','level','use_flag','sort','normal_flag','delete_flag','create_time','update_time'];
+        switch ($group_info['group_id']){
+            case 'all':
+                $data['total']=InfiniteType::where($where)->count(); //总的数据量
+                $data['items']=InfiniteType::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+
+            case 'one':
+                $where[]=['group_code','=',$group_info['group_code']];
+                $data['total']=InfiniteType::where($where)->count(); //总的数据量
+                $data['items']=InfiniteType::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='N';
+                break;
+
+            case 'more':
+                $data['total']=InfiniteType::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
+                $data['items']=InfiniteType::where($where)->whereIn('group_code',$group_info['group_code'])
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+        }
+
+        foreach ($data['items'] as $k=>$v) {
+            $v->picture = img_for($v->picture,'more');
+        }
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
     }
 
     /**
@@ -786,12 +921,12 @@ class PlatformController extends CommonController{
 
 
         /*** 虚拟数据
-                $input['self_id']        = $self_id ='';
-                $input['name']           = $name    ='外形尺寸';
-                $input['pid']            = $pid     ='1';
-                $input['level']          = $level   ='1';
-                $input['sort']           = $sort    ='1';
-                $input['normal_flag']    = $normal_flag    ='4865x1715x2060';
+             $input['self_id']        = $self_id ='';
+             $input['name']           = $name    ='外形尺寸';
+             $input['pid']            = $pid     ='1';
+             $input['level']          = $level   ='1';
+             $input['sort']           = $sort    ='1';
+             $input['normal_flag']    = $normal_flag    ='4865x1715x2060';
          **/
         $rules=[
             'name'=>'required',
