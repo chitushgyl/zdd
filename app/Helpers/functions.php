@@ -644,7 +644,6 @@ function list_to_tree($list)
                 if (isset($refer[$parentId])) {
                     $parent =& $refer[$parentId];
                     $parent['son'][] =& $list[$key];
-                    $parent['son'][$key]['name'] =& '--'.$list[$key]['name'];
                 }
             }
         }
