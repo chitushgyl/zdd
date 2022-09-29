@@ -447,41 +447,27 @@ class PlatformController extends CommonController{
         /** 接收数据*/
         $self_id            =$request->input('self_id');
         $group_code         =$request->input('group_code');
-        $brand              =$request->input('brand');
-        $type               =$request->input('type');
-        $car_type           =$request->input('car_type');
-        $price              =$request->input('price');
-        $view               =$request->input('view');
-        $car_name           =$request->input('car_name');
-        $picture            =$request->input('picture');
-//        $control            =$request->input('control');
-//        $check_time         =$request->input('check_time');
-//        $license            =$request->input('license');
-//        $medallion          =$request->input('medallion');
-//        $board_time         =$request->input('board_time');
-//        $car_type_id        =$request->input('car_type_id');
-//        $contacts        =$request->input('contacts');
-//        $tel        =$request->input('tel');
+        $brand              =$request->input('brand');//品牌
+        $type               =$request->input('type');//品牌型号
+        $car_type           =$request->input('car_type');//车型
+        $price              =$request->input('price');//价格
+        $view               =$request->input('view');//详情
+        $car_name           =$request->input('car_name');//车名
+        $picture            =$request->input('picture');//图片
+        $param              =$request->input('param');//配置参数
 
 
         /*** 虚拟数据
-        //        $input['self_id']         =$self_id='good_202007011336328472133661';
-        $input['group_code']        =$group_code='1234';
-        $input['brand']             =$brand='64';
-        $input['car_type']          =$type='沪A45612';
-        $input['type']              =$type='64';
-        $input['price']             =$price='GIUIUIT';
-        $input['view']              =$view='GIUIUIT';
-        $input['car_name']          =$car_name='GIUIUIT';
-        $input['picture']           =$picture='GIUIUIT';
-        $input['control']           =$control='GIUIUIT';
-        $input['check_time']        =$check_time='2020-01-02';
-        $input['license']           =$license='GIUIUIT';
-        $input['medallion']         =$medallion='GIUIUIT';
-        $input['board_time']        =$board_time='2020-05-06';
-        $input['car_type_id']       =$car_type_id='type_202101061323561478489954';
-        $input['contacts']          =$contacts='haha';
-        $input['tel']               =$tel='18564516123';
+        $input['self_id']                   =$self_id='good_202007011336328472133661';
+        $input['group_code']                =$group_code='1234';
+        $input['brand']                     =$brand='64';
+        $input['car_type']                  =$type='沪A45612';
+        $input['type']                      =$type='64';
+        $input['price']                     =$price='GIUIUIT';
+        $input['view']                      =$view='GIUIUIT';
+        $input['car_name']                  =$car_name='GIUIUIT';
+        $input['picture']                   =$picture='GIUIUIT';
+        $input['param']                     =$param='GIUIUIT';
          **/
         $rules=[
             'brand'=>'required',
@@ -509,42 +495,30 @@ class PlatformController extends CommonController{
                 return $msg;
             }
 
-            $data['car_type']          =$car_type;
-            $data['brand']             =$brand;
-            $data['type']              =$type;
-            $data['car_name']          =$car_name;
-            $data['view']              =$view;
-            $data['price']             =$price;
-            $data['picture']           =img_for($picture,'more');
-
-//            $data['control']           =$control;
-//            $data['check_time']        =$check_time;
-//            $data['license']           =$license;
-//            $data['medallion']         =$medallion;
-//            $data['board_time']        =$board_time;
-//            $data['car_type_id']       =$info2->self_id;
-//            $data['car_type_name']     =$info2->parame_name;
+            $data['type']           =$type;
+            $data['brand']          =$brand;
+            $data['car_type']       =$car_type;
+            $data['price']          =$price;
+            $data['view']           =$view;
+            $data['car_name']       =$car_name;
+            $data['picture']        =img_for($picture,'in');
+            $data['param']          =$param;
 
             //dump($data);
 
-            //dd($input);
             $wheres['self_id'] = $self_id;
             $old_info=AppCar::where($wheres)->first();
 
             if($old_info){
-                //dd(1111);
                 $data['update_time']=$now_time;
                 $id=AppCar::where($wheres)->update($data);
 
                 $operationing->access_cause='添加车辆';
                 $operationing->operation_type='update';
 
-
             }else{
-
                 $data['self_id']            =generate_id('car_');
                 $data['group_code']         = $group_code;
-
                 $data['create_user_id']     =$user_info->admin_id;
                 $data['create_user_name']   =$user_info->name;
                 $data['create_time']        =$data['update_time']=$now_time;
@@ -552,7 +526,6 @@ class PlatformController extends CommonController{
                 $id=AppCar::insert($data);
                 $operationing->access_cause='新建车辆';
                 $operationing->operation_type='create';
-
             }
 
             $operationing->table_id=$old_info?$self_id:$data['self_id'];
