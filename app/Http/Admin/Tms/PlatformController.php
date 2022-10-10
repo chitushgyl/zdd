@@ -67,7 +67,7 @@ class PlatformController extends CommonController{
             }else{
 
                 $data['self_id']            =generate_id('c_');
-                $data['picture']            =img_for($picture,'on_json');
+                $data['picture']            =img_for($picture,'in');
                 $data['sort']               =$sort;
                 $data['create_time']        =$data['update_time']=$now_time;
 
