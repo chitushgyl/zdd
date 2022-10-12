@@ -190,25 +190,65 @@ class HomeController extends Controller {
         $type               =$request->input('type');
 
         /*** 虚拟数据
-        $input['self_id']           =$self_id='';
+        $input['self_id']           =$self_id     ='';
         $input['company_name']      =$company_name='company_name';
-        $input['group_code']           =$group_code='group_code';
-        $input['connact']         =$connact     ='connact';
-        $input['name']              =$name   ='name';
-        $input['address']          =$address  ='company_address';
-        $input['type']             =$type  ='客户';
+        $input['group_code']        =$group_code  ='group_code';
+        $input['connact']           =$connact     ='connact';
+        $input['name']              =$name        ='name';
+        $input['type']              =$type        ='客户';
+        $input['channel_way']       =$channel_way ='';//推荐渠道
+        $input['identity']          =$identity    ='';//身份证号
+        $input['id_front']          =$id_front    ='';//身份证正面
+        $input['id_back']           =$id_back     ='';//身份证反面
+        $input['auth_serch']        =$auth_serch  ='';//个人授权查询书
+        $input['hold_img']          =$hold_img    ='';//手持照片
+        $input['auth_serch_company']=$auth_serch_company    ='';//手持照片
          ***/
 //        dd($input);
-        $rules=[
-            'type'=>'required',
-            'name'=>'required',
-            'connact'=>'required',
-        ];
-        $message=[
-            'type.required'=>'请选择类型',
-            'name.required'=>'请填写姓名',
-            'connact.required'=>'请填写联系方式',
-        ];
+        if($type == 'personal'){
+            $rules=[
+                'name'=>'required',
+                'connact'=>'required',
+                'channel_way'=>'required',
+                'identity'=>'required',
+                'id_front'=>'required',
+                'id_back'=>'required',
+                'auth_serch'=>'required',
+                'hold_img'=>'required',
+            ];
+            $message=[
+                'name.required'=>'请填写姓名',
+                'connact.required'=>'请填写联系方式',
+                'company_name.required'=>'请填写公司名称',
+                'channel_way.required'=>'请填写推荐渠道公司名称',
+                'identity.required'=>'请填写身份证号',
+                'id_front.required'=>'请上传身份证正面照',
+                'id_back.required'=>'请上传身份证反面照',
+                'auth_serch.required'=>'请上传个人授权查询书',
+                'hold_img.required'=>'请上传手持照片',
+            ];
+        }else{
+            $rules=[
+                'name'=>'required',
+                'company_name'=>'required',
+                'connact'=>'required',
+                'channel_way'=>'required',
+                'identity'=>'required',
+                'id_front'=>'required',
+                'id_back'=>'required',
+                'auth_serch'=>'required',
+                'hold_img'=>'required',
+                'auth_serch_company'=>'required',
+            ];
+            $message=[
+                'name.required'=>'请填写姓名',
+                'connact.required'=>'请填写联系方式',
+                'company_name.required'=>'请填写公司名称',
+                'channel_way.required'=>'请填写推荐渠道公司名称',
+                'auth_serch.required'=>'请上传个人授权书',
+                'auth_serch_company.required'=>'请上传公司授权书',
+            ];
+        }
         $validator=Validator::make($input,$rules,$message);
 
         if($validator->passes()){
@@ -219,7 +259,7 @@ class HomeController extends Controller {
             if($old_info){
 
             }else{
-                $data['self_id']            = generate_id('company_');		//优惠券表ID
+                $data['self_id']            = generate_id('connect_');		//优惠券表ID
                 $data['company_name']       = $company_name;
                 $data['connact']            = $connact;
                 $data['group_code']         = $group_code;
