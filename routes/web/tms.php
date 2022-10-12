@@ -375,6 +375,9 @@ Route::group([
     Route::any('/platform/getType','PlatformController@getType');//添加车辆配置
     Route::any('/platform/carList','PlatformController@carList');//添加车辆
     Route::any('/platform/carPage','PlatformController@carPage');//添加车辆列表
+    Route::any('/platform/delCar','PlatformController@delCar');//删除车辆
+    Route::any('/platform/delBrand','PlatformController@delBrand');//删除品牌
+    Route::any('/platform/delCarousel','PlatformController@delCarousel');//删除轮播图
 });
 
 

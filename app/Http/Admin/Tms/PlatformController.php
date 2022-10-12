@@ -10,6 +10,7 @@ use App\Models\Tms\CarBrand;
 use App\Models\Tms\ChargeAddress;
 use App\Models\Tms\InfiniteType;
 use App\Models\Tms\TmsCarType;
+use App\Models\Tms\TmsConnact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -1046,6 +1047,83 @@ class PlatformController extends CommonController{
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
         $msg['data']=$res;
+        return $msg;
+    }
+
+    /**
+     * 贷款申请列表
+     * */
+    public function loanList(Request $request){
+        $data['page_info']      =config('page.listrows');
+        $data['button_info']    =$request->get('anniu');
+
+        $abc='贷款申请列表';
+        $data['import_info']    =[
+
+        ];
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+        return $msg;
+    }
+
+    public function loanPage(Request $request){
+        /** 接收中间件参数**/
+        $group_info     = $request->get('group_info');//接收中间件产生的参数
+        $button_info    = $request->get('anniu');//接收中间件产生的参数
+
+        /**接收数据*/
+        $num            =$request->input('num')??10;
+        $page           =$request->input('page')??1;
+        $name           =$request->input('name');
+        $address        =$request->input('address');
+        $listrows       =$num;
+        $firstrow       =($page-1)*$listrows;
+
+        $search=[
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+        ];
+
+        $where=get_list_where($search);
+
+        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch'];
+        switch ($group_info['group_id']){
+            case 'all':
+                $data['total']=TmsConnact::where($where)->count(); //总的数据量
+                $data['items']=TmsConnact::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+
+            case 'one':
+                $where[]=['group_code','=',$group_info['group_code']];
+                $data['total']=TmsConnact::where($where)->count(); //总的数据量
+                $data['items']=TmsConnact::where($where)
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='N';
+                break;
+
+            case 'more':
+                $data['total']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
+                $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
+                    ->offset($firstrow)->limit($listrows)->orderBy('sort', 'desc')
+                    ->select($select)->get();
+                $data['group_show']='Y';
+                break;
+        }
+
+        foreach ($data['items'] as $k=>$v) {
+            $v->id_front   = img_for($v->id_front,'no_json');
+            $v->id_back    = img_for($v->id_back,'no_json');
+            $v->auth_serch = img_for($v->auth_serch,'no_json');
+        }
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
         return $msg;
     }
 
