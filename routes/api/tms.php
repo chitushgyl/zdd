@@ -291,11 +291,14 @@ Route::group([
 });
 
 Route::group([
-    "middleware"=>['frontCheck','userCheck'],
+    "middleware"=>['frontCheck','userCheck','holdCheck'],
 ], function(){
-    Route::any('/home/customer_service','HomeController@customer_service');//联系客服
+    Route::group([
+        'prefix' => 'api','namespace'  => 'Tms',
+    ], function() {
+        Route::any('/home/customer_service', 'HomeController@customer_service');//联系客服
 
-
+    });
 
 
 });
