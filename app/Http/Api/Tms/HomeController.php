@@ -186,8 +186,14 @@ class HomeController extends Controller {
         $group_code         =$request->input('group_code');
         $connact            =$request->input('connact');
         $name       	    =$request->input('name');
-        $address            =$request->input('company_address');
-        $type               =$request->input('type');
+        $type       	    =$request->input('type');
+        $channel_way        =$request->input('channel_way');
+        $identity           =$request->input('identity');
+        $id_front           =$request->input('id_front');
+        $id_back            =$request->input('id_back');
+        $auth_serch         =$request->input('auth_serch');
+        $hold_img           =$request->input('hold_img');
+        $auth_serch_company =$request->input('auth_serch_company');
 
         /*** 虚拟数据
         $input['self_id']           =$self_id     ='';
@@ -265,9 +271,14 @@ class HomeController extends Controller {
                 $data['group_code']         = $group_code;
                 $data['name']               = $name;
                 $data['type']      		    = $type;
-                $data['address']      		= $address;
+                $data['channel_way']      	= $channel_way;
                 $data['create_time']        = $data['update_time']	= $now_time;
-                $data['address']      		= $address;
+                $data['identity']      		= $identity;
+                $data['id_front']      		= $id_front;
+                $data['id_back']      		= $id_back;
+                $data['auth_serch']      	= $auth_serch;
+                $data['hold_img']      		= $hold_img;
+                $data['auth_serch_company'] = $auth_serch_company;
                 $id=TmsConnact::insert($data);
 
             }
