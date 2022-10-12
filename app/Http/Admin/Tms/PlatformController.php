@@ -4,6 +4,7 @@ namespace App\Http\Admin\tms;
 
 
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\DetailsController as Details;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
@@ -1125,6 +1126,68 @@ class PlatformController extends CommonController{
         $msg['msg']="数据拉取成功";
         $msg['data']=$data;
         return $msg;
+    }
+    /**
+     * 贷款申请详情
+     * */
+    public function loanDetails(Request $request,Details $details){
+        $self_id    = $request->input('self_id');
+        $table_name = 'tms_car';
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch'];
+        // $self_id = 'car_202101111749191839630920';
+        $info = $details->details($self_id,$table_name,$select);
+
+        if($info) {
+            /** 如果需要对数据进行处理，请自行在下面对 $info 进行处理工作*/
+            $info->id_front   = img_for($info->id_front,'no_json');
+            $info->id_back    = img_for($info->id_back,'no_json');
+            $info->auth_serch = img_for($info->auth_serch,'no_json');
+
+            $data['info'] = $info;
+            $msg['code']  = 200;
+            $msg['msg']   = "数据拉取成功";
+            $msg['data']  = $data;
+            return $msg;
+        }else{
+            $msg['code'] = 300;
+            $msg['msg']  = "没有查询到数据";
+            return $msg;
+        }
+    }
+
+    /**
+     * 删除贷款申请
+     * */
+    public function delLoan(Request $request){
+        $now_time=date('Y-m-d H:i:s',time());
+        $operationing = $request->get('operationing');//接收中间件产生的参数
+        $table_name='tms_connact';
+        $self_id=$request->input('self_id');
+        $flag='delete_flag';
+//        $self_id = 'charge_202209241459564105870102';
+        $old_info = TmsConnact::where('self_id',$self_id)->select('self_id','use_flag','delete_flag','update_time')->first();
+        $update['delete_flag'] = 'N';
+        $update['update_time'] = $now_time;
+        $id = TmsConnact::where('self_id',$self_id)->update($update);
+
+        $operationing->access_cause='删除';
+        $operationing->table=$table_name;
+        $operationing->table_id=$self_id;
+        $operationing->now_time=$now_time;
+        $operationing->old_info=$old_info;
+        $operationing->new_info=(object)$update;
+        $operationing->operation_type=$flag;
+        if($id){
+            $msg['code']=200;
+            $msg['msg']='删除成功！';
+            $msg['data']=(object)$update;
+        }else{
+            $msg['code']=300;
+            $msg['msg']='删除失败！';
+        }
+
+        return $msg;
+
     }
 
 

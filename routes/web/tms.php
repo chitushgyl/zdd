@@ -378,6 +378,10 @@ Route::group([
     Route::any('/platform/delCar','PlatformController@delCar');//删除车辆
     Route::any('/platform/delBrand','PlatformController@delBrand');//删除品牌
     Route::any('/platform/delCarousel','PlatformController@delCarousel');//删除轮播图
+    Route::any('/platform/loanList','PlatformController@loanList');//
+    Route::any('/platform/loanPage','PlatformController@loanPage');//贷款申请列表
+    Route::any('/platform/loanDetails','PlatformController@loanDetails');//贷款申请详情
+    Route::any('/platform/delLoan','PlatformController@delLoan');//删除贷款申请
 });
 
 
