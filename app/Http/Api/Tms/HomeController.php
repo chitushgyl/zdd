@@ -269,16 +269,17 @@ class HomeController extends Controller {
                 $data['company_name']       = $company_name;
                 $data['connact']            = $connact;
                 $data['group_code']         = $group_code;
+                $data['total_user_id']      = $user_info->total_user_id;
                 $data['name']               = $name;
                 $data['type']      		    = $type;
                 $data['channel_way']      	= $channel_way;
                 $data['create_time']        = $data['update_time']	= $now_time;
                 $data['identity']      		= $identity;
-                $data['id_front']      		= $id_front;
-                $data['id_back']      		= $id_back;
-                $data['auth_serch']      	= $auth_serch;
-                $data['hold_img']      		= $hold_img;
-                $data['auth_serch_company'] = $auth_serch_company;
+                $data['id_front']      		= img_for($id_front,'on_json');
+                $data['id_back']      		= img_for($id_back,'on_json');
+                $data['auth_serch']      	= img_for($auth_serch,'on_json');
+                $data['hold_img']      		= img_for($hold_img,'on_json');
+                $data['auth_serch_company'] = img_for($auth_serch_company,'on_json');
                 $id=TmsConnact::insert($data);
 
             }
