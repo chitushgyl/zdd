@@ -178,7 +178,7 @@ class HomeController extends Controller {
         $now_time       =date('Y-m-d H:i:s',time());
         $table_name     ='tms_group';
 
-        $user_info = $request->get('user_info');//接收中间件产生的参数
+        $user_info      = $request->get('user_info');//接收中间件产生的参数
         $input              =$request->all();
         /** 接收数据*/
         $self_id            =$request->input('self_id');
