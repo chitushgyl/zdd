@@ -239,7 +239,6 @@ class HomeController extends Controller {
                 'company_name'=>'required',
                 'connact'=>'required',
                 'channel_way'=>'required',
-                'hold_img'=>'required',
                 'auth_serch_company'=>'required',
             ];
             $message=[
@@ -296,8 +295,7 @@ class HomeController extends Controller {
             $msg['code']=300;
             $msg['msg']=null;
             foreach ($erro as $k => $v){
-                $kk=$k+1;
-                $msg['msg'].=$kk.'：'.$v.'</br>';
+                $msg['msg'].='：'.$v;
             }
             return $msg;
         }
