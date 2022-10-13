@@ -239,10 +239,6 @@ class HomeController extends Controller {
                 'company_name'=>'required',
                 'connact'=>'required',
                 'channel_way'=>'required',
-                'identity'=>'required',
-                'id_front'=>'required',
-                'id_back'=>'required',
-                'auth_serch'=>'required',
                 'hold_img'=>'required',
                 'auth_serch_company'=>'required',
             ];
@@ -251,7 +247,6 @@ class HomeController extends Controller {
                 'connact.required'=>'请填写联系方式',
                 'company_name.required'=>'请填写公司名称',
                 'channel_way.required'=>'请填写推荐渠道公司名称',
-                'auth_serch.required'=>'请上传个人授权书',
                 'auth_serch_company.required'=>'请上传公司授权书',
             ];
         }
