@@ -418,7 +418,7 @@ function unit_do($good_unit , $good_target_unit, $good_scale, $num) {
      * */
 function bd_location($type,$pro,$city,$area,$info){
 //    $ak ="PaC1MWoU0dYwg1ZHB6IgKEFOhy3PIpvc";
-    $ak = '27uKVv8Q5jQpeZb6Vxaei7RvZhjNa3Gg';
+    $ak = 'avhkiekDiZLB3W4mT8HzG1O66eOPAGqd';
     if($type == 1){
         $address = $pro.$city;
     }else{
@@ -496,7 +496,7 @@ function direction($lat1, $lng1, $lat2, $lng2){
     if(empty($lat1) || empty($lng1) || empty($lat2) || empty($lng2)){
         return '';
     }
-    $ak ="SdRptW2rs3xsjHhVhQOy17QzP6Gexbp6";
+    $ak ="avhkiekDiZLB3W4mT8HzG1O66eOPAGqd";
     $url = "http://api.map.baidu.com/direction/v2/driving?output=json&tactics=0&origin=".$lat1.",".$lng1."&destination=".$lat2.",".$lng2."&ak=".$ak;
 
     $renderOption = file_get_contents($url);
@@ -516,7 +516,7 @@ function directionc($lat1, $lng1, $lat2, $lng2){
     if(empty($lat1) || empty($lng1) || empty($lat2) || empty($lng2)){
         return '';
     }
-    $ak ="SdRptW2rs3xsjHhVhQOy17QzP6Gexbp6";
+    $ak ="avhkiekDiZLB3W4mT8HzG1O66eOPAGqd";
     $url = "http://api.map.baidu.com/direction/v2/driving?output=json&tactics=0&origin=".$lat1.",".$lng1."&destination=".$lat2.",".$lng2."&ak=".$ak;
 
     $renderOption = file_get_contents($url);

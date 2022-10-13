@@ -1132,8 +1132,8 @@ class PlatformController extends CommonController{
      * */
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
-        $table_name = 'tms_car';
-        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch'];
+        $table_name = 'tms_connact';
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
@@ -1142,6 +1142,8 @@ class PlatformController extends CommonController{
             $info->id_front   = img_for($info->id_front,'no_json');
             $info->id_back    = img_for($info->id_back,'no_json');
             $info->auth_serch = img_for($info->auth_serch,'no_json');
+            $info->auth_serch_company = img_for($info->auth_serch_company,'no_json');
+            $info->hold_img = img_for($info->hold_img,'no_json');
 
             $data['info'] = $info;
             $msg['code']  = 200;
