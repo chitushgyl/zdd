@@ -562,7 +562,7 @@ class PlatformController extends CommonController{
             $data['view']           =$view;
             $data['car_name']       =$car_name;
             $data['picture']        =img_for($picture,'more');
-            $data['param']          =$param;
+            $data['param']          =json_encode($param,JSON_UNESCAPED_UNICODE);
 
             //dump($data);
 
