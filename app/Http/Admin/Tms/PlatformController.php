@@ -561,7 +561,7 @@ class PlatformController extends CommonController{
             $data['price']          =$price;
             $data['view']           =$view;
             $data['car_name']       =$car_name;
-            $data['picture']        =img_for($picture,'in');
+            $data['picture']        =img_for($picture,'more');
             $data['param']          =$param;
 
             //dump($data);
