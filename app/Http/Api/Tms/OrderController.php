@@ -2823,7 +2823,7 @@ class OrderController extends Controller{
 
     }
 
-    public function countKlio($type,$startcity_str,$endcity_str){
+    public function  countKlio($type,$startcity_str,$endcity_str){
         if (count($startcity_str) == 1 && count($endcity_str) == 1){
             // 起点城市经纬度
             $start_action = bd_location($type,'',$startcity_str[0]['city'],$startcity_str[0]['area'],$startcity_str[0]['info']);//经纬度
@@ -2983,11 +2983,11 @@ class OrderController extends Controller{
                     //小于起步公里数 不计里程费
                     $kilo_price = 0;
                 }else{
-                    $kilo_price = $kilo*$city_role->scale_one_km*$city_role->scale_price*$car->costkm_price/100;
+                    $kilo_price = ($kilo-$city_role->scale_klio)*$city_role->scale_one_km*$city_role->scale_price*$car->costkm_price/100;
                 }
             }else{
                 //大于分段公里数
-                $kilo_price = $kilo*$city_role->scale_two_km*$city_role->scale_price*$car->costkm_price/100;
+                $kilo_price = ($kilo-$city_role->scale_klio)*$city_role->scale_two_km*$city_role->scale_price*$car->costkm_price/100;
             }
             // 装货费
             if ($picktype == 2){
