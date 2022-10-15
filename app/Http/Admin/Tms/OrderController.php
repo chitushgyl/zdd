@@ -2521,16 +2521,16 @@ class OrderController extends CommonController{
                         $money['update_time'] = $now_time;
                         UserCapital::where($wallet_where)->update($money);
 
-                        $data['self_id'] = generate_id('wallet_');
-                        $data['produce_type'] = 'in';
-                        $data['capital_type'] = 'wallet';
-                        $data['create_time'] = $now_time;
-                        $data['update_time'] = $now_time;
-                        $data['now_money'] = $money['money'];
-                        $data['now_money_md'] = get_md5($money['money']);
-                        $data['wallet_status'] = 'SU';
-
-                        UserWallet::insert($data);
+//                        $data['self_id'] = generate_id('wallet_');
+//                        $data['produce_type'] = 'in';
+//                        $data['capital_type'] = 'wallet';
+//                        $data['create_time'] = $now_time;
+//                        $data['update_time'] = $now_time;
+//                        $data['now_money'] = $money['money'];
+//                        $data['now_money_md'] = get_md5($money['money']);
+//                        $data['wallet_status'] = 'SU';
+//
+//                        UserWallet::insert($data);
                     }
 //                    }
                 }
