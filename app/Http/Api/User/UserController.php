@@ -135,9 +135,6 @@ class UserController extends Controller{
 
         }
 
-
-//        dump($project_type);
-
         $project_type2=$project_type.'_owm';
 //        dd($user_info);
         if($user_info){
@@ -177,65 +174,8 @@ class UserController extends Controller{
         }])->where($user_foot_where)->select($select)->orderBy('sort','asc')->get();
 //        dd($info);
         foreach ($info as $k => $v){
-
             $v->inactive_img=img_for($v->inactive_img,'no_json');
             switch ($v->type){
-                case 'message':
-
-                    if($user_info){
-                        if($user_info->userCapital->money>1000000){
-                            $money['wallet']=number_format($user_info->userCapital->money/1000000, 2).'万';                 //用户余额
-                        }else{
-                            $money['wallet']=number_format($user_info->userCapital->money/100, 2);                          //用户余额
-                        }
-
-                        if($user_info->userCapital->integral>1000000){
-                            $money['integral']=number_format($user_info->userCapital->integral/1000000, 2).'万';           //用户余额
-                        }else{
-                            $money['integral']=number_format($user_info->userCapital->integral/100, 2);                    //用户余额
-                        }
-
-                        //拉取用户的优惠券，先把过去的券的状态变一下
-                        $user_coupon_where_do=[
-                            ['total_user_id','=',$user_info->total_user_id],
-                            ['coupon_status','=','unused'],
-                            ['time_end','<',$now_time],
-                        ];
-                        //将使用时间超过现在时间的券的状态变成过期的状态
-                        $coupon_data['coupon_status']='stale';
-                        $coupon_data['update_time']=$now_time;
-                        UserCoupon::where($user_coupon_where_do)->update($coupon_data);
-
-                        $user_coupon_where=[
-                            ['total_user_id','=',$user_info->total_user_id],
-                            ['coupon_status','=','unused'],
-                        ];
-                        $money['coupon']=UserCoupon::where($user_coupon_where)->count();
-
-                        $user_track_where=[
-                            ['total_user_id','=',$user_info->total_user_id],
-                            ['delete_flag','=','Y'],
-                        ];
-                        $user_track_where2=[
-                            ['good_status','=','Y'],
-                            ['delete_flag','=','Y'],
-                            ['sell_start_time','<',$now_time],
-                            ['sell_end_time','>',$now_time],
-                        ];
-
-
-                        $money['track']=UserTrack::wherehas('erpShopGoods',function($query)use($user_track_where2){
-                            $query->where($user_track_where2);
-                        })->where($user_track_where)->count();
-
-                    }
-
-                    foreach ($v->sysFoot as $kk => $vv){
-                        $vv->inactive_img=img_for($vv->inactive_img,'no_json');
-                        $vv->number=$money[$vv->type]??0;
-                    }
-                    break;
-
                 case 'order':
                     /** 初始化一下*/
                     foreach ($v->sysFoot as $kkk => $vvv){
@@ -335,9 +275,6 @@ class UserController extends Controller{
                                 if ($vv->order_status == 4 || $vv->order_status == 5){
                                     $abcd='status2';
                                 }
-//                            if ($vv->order_status == 6){
-//                                $abcd='status3';
-//                            }
                                 if ($vv->order_status == 7){
                                     $abcd='status4';
                                 }
@@ -379,9 +316,7 @@ class UserController extends Controller{
                                 if ($vv->order_status == 4 || $vv->order_status == 5){
                                     $abcd='status2';
                                 }
-//                            if ($vv->order_status == 6){
-//                                $abcd='status3';
-//                            }
+
                                 if ($vv->order_status == 7){
                                     $abcd='status4';
                                 }
@@ -460,9 +395,7 @@ class UserController extends Controller{
                                 if ($vv->order_status == 4 || $vv->order_status == 5){
                                     $abcd='status2';
                                 }
-//                            if ($vv->order_status == 6){
-//                                $abcd='status3';
-//                            }
+
                                 foreach ($v->sysFoot as $kkk => $vvv){
                                     if($vvv->type == $abcd){
                                         $vvv->number += $vv->num;
@@ -497,9 +430,6 @@ class UserController extends Controller{
                                 if ($vv->order_status == 4 || $vv->order_status == 5){
                                     $abcd='status2';
                                 }
-//                            if ($vv->order_status == 6){
-//                                $abcd='status3';
-//                            }
                                 foreach ($v->sysFoot as $kkk => $vvv){
                                     if($vvv->type == $abcd){
                                         $vvv->number += $vv->num;
@@ -513,12 +443,6 @@ class UserController extends Controller{
                     }
                     break;
 
-//                case 'driver_order':
-//                    foreach ($v->sysFoot as $kkk => $vvv){
-//                        $vvv->inactive_img=img_for($vvv->inactive_img,'no_json');
-//                        $vvv->number=0;
-//                    }
-//                    break;
                 case 'carriage_order':
                     foreach ($v->sysFoot as $kkk => $vvv){
                         $vvv->inactive_img=img_for($vvv->inactive_img,'no_json');
@@ -541,9 +465,7 @@ class UserController extends Controller{
                                 if ($vv->order_status == 4 || $vv->order_status == 5){
                                     $abcd='status2';
                                 }
-//                            if ($vv->order_status == 6){
-//                                $abcd='status3';
-//                            }
+
                                 foreach ($v->sysFoot as $kkk => $vvv){
                                     if($vvv->type == $abcd){
                                         $vvv->number += $vv->num;
@@ -602,28 +524,18 @@ class UserController extends Controller{
                     }
 
                     if ($user_info){
-//                        ($user_info->type == 'TMS3PL' || $user_info->type == 'company')
                         if ($user_info->type == 'user' ||$user_info->type == 'carriage'){
-//                            if($user_info->userCapital->money>1000000){
-//                                $user_info->userCapital->money = $money =number_format($user_info->userCapital->money/1000000, 2).'万';                 //用户余额
-//                            }else{
-//                                $user_info->userCapital->money = $money =number_format($user_info->userCapital->money/100, 2);                          //用户余额
-//                            }
                             $user_info->userCapital->money = $money = number_format($user_info->userCapital->money/100,2);
-//                            dd($money);
+                            $user_info->userCapital->wait_money = number_format($user_info->userCapital->wait_money/100,2);
                         }else{
                             $admin_where=[
                                 ['group_code','=',$user_info->group_code],
                                 ['delete_flag','=','Y'],
                             ];
-                            $select_capital=['self_id','money'];
+                            $select_capital=['self_id','money','wait_money'];
                             $money_info=UserCapital::where($admin_where)->select($select_capital)->first();
                             $user_info->userCapital->money = $money = number_format($money_info->money/100,2);
-//                            if($money_info->money>=1000000){
-//                                $user_info->userCapital->money = $money =number_format($money_info->money/1000000, 2).'万';                 //用户余额
-//                            }else{
-//                                $user_info->userCapital->money = $money =number_format($money_info->money/100, 2);                          //用户余额
-//                            }
+                            $user_info->userCapital->wait_money = number_format($money_info->wait_money/100,2);
                         }
                     }
 //                    dd($money);
@@ -643,8 +555,6 @@ class UserController extends Controller{
 
                     }
                     break;
-//                case '':
-//                    break;
                 default:
 
                     foreach ($v->sysFoot as $kkk => $vvv){
