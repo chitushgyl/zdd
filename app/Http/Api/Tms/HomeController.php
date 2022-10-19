@@ -314,6 +314,7 @@ class HomeController extends Controller {
         $search = [
             ['type'=>'like','name'=>'address','value'=>$address],
             ['type'=>'like','name'=>'name','value'=>$name],
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
         ];
         $where=get_list_where($search);
         $select = ['self_id','name','address','open_time','view','picture','lat','lnt','create_time'];

@@ -411,6 +411,7 @@ class OrderController extends Controller{
         $reduce_price  = $request->input('reduce_price');//立减金额
         $payer         = $request->input('payer');//付款方：发货人 consignor  收货人receiver
         $kilo         = $request->input('kilometre');//付款方：发货人 consignor  收货人receiver
+        $common_use         = $request->input('common_use');//付款方：发货人 consignor  收货人receiver
        /*** 虚拟数据
         //$input['self_id']   = $self_id='';
         $input['order_type']  = $order_type='vehicle';  //vehicle  lcl   line
