@@ -3037,7 +3037,7 @@ class OrderController extends Controller{
             }else{
                 $data['self_id']          = generate_id('line_');
                 $data['name']             = $name;
-                $data['dispatcher']       = $dispatcher;
+                $data['dispatcher']       = json_encode($dispatcher,JSON_UNESCAPED_UNICODE);
                 if ($type == 'user'){
                     $data['total_user_id']    = $user_info->total_user_id;
                 }else{
@@ -3133,6 +3133,6 @@ class OrderController extends Controller{
         $msg['data']=$status_info['new_info'];
         return $msg;
     }
-    
+
 }
 ?>
