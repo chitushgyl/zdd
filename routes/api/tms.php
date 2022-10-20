@@ -176,6 +176,10 @@ Route::group([
         Route::any('/order/userFreeRideList','OrderController@userFreeRideList');//顺风车列表
         Route::any('/order/freeRideList','OrderController@freeRideList');//顺风车列表
         Route::any('/order/liftOrder','OrderController@liftOrder');//顺风车列表
+        /*** 常发线路**/
+        Route::any('/order/addCommonLine','OrderController@addCommonLine');//添加常发线路
+        Route::any('/order/commonLinePage','OrderController@commonLinePage');//常发线路列表
+        Route::any('/order/delCommonLine','OrderController@delCommonLine');//删除常发线路
 
         /*** 快捷下单***/
         Route::any('/fastOrder/addFastOrder','FastOrderController@addFastOrder');//
