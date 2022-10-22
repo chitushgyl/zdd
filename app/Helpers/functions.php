@@ -45,14 +45,11 @@ function img_for($img,$type){
                 break;
 
             case 'in':
-		//dump($type);
                 foreach ($img as $k => $v) {
-			//dd($v);
                     $xq[$k]['url']     = substr($v['url'], $url_len);
                     $xq[$k]['width']   = $v['width'];
                     $xq[$k]['height']  = $v['height'];
                 }
-		//dd($xq);
                 $img=json_encode($xq);
                 break;
 
