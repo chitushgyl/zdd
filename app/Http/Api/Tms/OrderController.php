@@ -3103,13 +3103,19 @@ class OrderController extends Controller{
 
         $where=get_list_where($search);
         $select=['self_id','name','dispatcher','create_time','use_flag'];
+        $data['total'] = TmsCommonLine::where($where)->count();
         $data['info'] = TmsCommonLine::where($where)
             ->offset($firstrow)
             ->limit($listrows)
             ->orderBy('create_time', 'desc')
             ->select($select)
             ->get();
-        $data['total'] = TmsCommonLine::where($where)->count();
+
+        foreach ($data['info'] as $k=>$v) {
+            $v->dispatcher =  json_decode($v->dispatcher,true);
+
+        }
+
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
         $msg['data']=$data;

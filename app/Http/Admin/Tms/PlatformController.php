@@ -178,7 +178,7 @@ class PlatformController extends CommonController{
         }
 
         foreach ($data['items'] as $k=>$v) {
-                $v->picture = img_for('no_json',$v->picture);
+                $v->picture = img_for($v->picture,'no_json');
         }
 
 
