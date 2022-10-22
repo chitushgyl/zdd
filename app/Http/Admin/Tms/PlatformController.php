@@ -69,7 +69,7 @@ class PlatformController extends CommonController{
             }else{
 
                 $data['self_id']            =generate_id('c_');
-                $data['picture']            =img_for($picture,'one');
+                $data['picture']            =img_for($picture,'in');
                 $data['sort']               =$sort;
                 $data['create_time']        =$data['update_time']=$now_time;
 
@@ -178,7 +178,7 @@ class PlatformController extends CommonController{
         }
 
         foreach ($data['items'] as $k=>$v) {
-                $v->picture = img_for($v->picture,'no_json');
+                $v->picture = img_for($v->picture,'more');
         }
 
 
