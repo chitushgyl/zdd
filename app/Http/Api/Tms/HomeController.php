@@ -152,7 +152,7 @@ class HomeController extends Controller {
     public function carView(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'app_car';
-        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name','picture'];
+        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name','picture','param'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
