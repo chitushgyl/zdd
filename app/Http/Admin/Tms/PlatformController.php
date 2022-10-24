@@ -506,7 +506,6 @@ class PlatformController extends CommonController{
 
         /** 接收数据*/
         $self_id            =$request->input('self_id');
-        $group_code         =$request->input('group_code');
         $brand              =$request->input('brand');//品牌
         $type               =$request->input('type');//品牌型号
         $car_type           =$request->input('car_type');//车型
@@ -577,11 +576,12 @@ class PlatformController extends CommonController{
                 $operationing->operation_type='update';
 
             }else{
-                $data['self_id']            =generate_id('car_');
-                $data['group_code']         = $group_code;
-                $data['create_user_id']     =$user_info->admin_id;
-                $data['create_user_name']   =$user_info->name;
-                $data['create_time']        =$data['update_time']=$now_time;
+                $data['self_id']            = generate_id('car_');
+                $data['group_code']         = $user_info->group_code;
+                $data['group_name']         = $user_info->group_name;
+                $data['create_user_id']     = $user_info->admin_id;
+                $data['create_user_name']   = $user_info->name;
+                $data['create_time']        = $data['update_time']=$now_time;
 
                 $id=AppCar::insert($data);
                 $operationing->access_cause='新建车辆';
