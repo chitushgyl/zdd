@@ -1192,6 +1192,31 @@ class PlatformController extends CommonController{
 
     }
 
+    /**
+     * 车辆详情
+     * */
+    public function carView(Request $request,Details $details){
+        $self_id    = $request->input('self_id');
+        $table_name = 'app_car';
+        $select = ['self_id','type','brand','car_type','create_time','update_time','price','view','car_name','picture','param'];
+        // $self_id = 'car_202101111749191839630920';
+        $info = $details->details($self_id,$table_name,$select);
+
+        if($info) {
+            /** 如果需要对数据进行处理，请自行在下面对 $$info 进行处理工作*/
+            $info->picture = img_for($info->picture,'more');
+            $data['info'] = $info;
+            $msg['code']  = 200;
+            $msg['msg']   = "数据拉取成功";
+            $msg['data']  = $data;
+            return $msg;
+        }else{
+            $msg['code'] = 300;
+            $msg['msg']  = "没有查询到数据";
+            return $msg;
+        }
+    }
+
 
 
 
