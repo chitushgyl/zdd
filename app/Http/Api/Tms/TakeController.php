@@ -179,7 +179,7 @@ class TakeController extends Controller{
             $info->self_id_show  = substr($info->self_id,15);
 
             $info_good_info = $info->good_info;
-           
+
             $info->good_info = $info_good_info;
 
             $car_list = [];
@@ -342,9 +342,7 @@ class TakeController extends Controller{
             $v->self_id_show       = substr($v->self_id,15);
             $v->send_time          = date('m-d H:i',strtotime($v->send_time));
             $temperture = json_decode($v->clod);
-            foreach ($temperture as $kk => $vv){
-                $temperture[$kk]    = $tms_control_type[$vv] ?? null;
-            }
+
             if ($v->order_type == 'vehicle' || $v->order_type == 'lift'){
                 if ($v->tmsCarType){
                     $v->car_type_show = $v->tmsCarType->parame_name;
