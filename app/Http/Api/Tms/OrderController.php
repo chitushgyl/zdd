@@ -411,8 +411,8 @@ class OrderController extends Controller{
         $depart_time   = $request->input('depart_time')??null; //干线发车时间
         $reduce_price  = $request->input('reduce_price');//立减金额
         $payer         = $request->input('payer');//付款方：发货人 consignor  收货人receiver
-        $kilo         = $request->input('kilometre');//付款方：发货人 consignor  收货人receiver
-        $common_use         = $request->input('common_use');//付款方：发货人 consignor  收货人receiver
+        $kilo          = $request->input('kilometre');//付款方：发货人 consignor  收货人receiver
+        $common_use    = $request->input('common_use');//付款方：发货人 consignor  收货人receiver
        /*** 虚拟数据
         //$input['self_id']   = $self_id='';
         $input['order_type']  = $order_type='vehicle';  //vehicle  lcl   line
@@ -2422,9 +2422,11 @@ class OrderController extends Controller{
                             $wallet = UserCapital::where($wallet_where)->select(['self_id','money'])->first();
 
                             $money['money'] = $wallet->money + $carriage_order->on_line_money;
+                            $money['wait_money'] = $wallet->wait_money - $carriage_order->on_line_money;
                             $data['money'] = $carriage_order->on_line_money;
                             if ($carriage_order->group_code == $carriage_order->receiver_id){
                                 $money['money'] = $wallet->money + $carriage_order->total_money;
+                                $money['wait_money'] = $wallet->wait_money - $carriage_order->total_money;
                                 $data['money'] = $carriage_order->total_money;
                             }
 

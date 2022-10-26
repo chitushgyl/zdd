@@ -2512,9 +2512,11 @@ class OrderController extends CommonController{
                         $wallet = UserCapital::where($wallet_where)->select(['self_id','money'])->first();
 
                         $money['money'] = $wallet->money + $carriage_order->on_line_money;
+                        $money['wait_money'] = $wallet->wait_money - $carriage_order->on_line_money;
                         $data['money'] = $carriage_order->on_line_money;
                         if ($carriage_order->group_code == $carriage_order->receiver_id){
                             $money['money'] = $wallet->money + $carriage_order->total_money;
+                            $money['wait_money'] = $wallet->wait_money - $carriage_order->total_money;
                             $data['money'] = $carriage_order->total_money;
                         }
 
