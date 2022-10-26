@@ -179,9 +179,7 @@ class TakeController extends Controller{
             $info->self_id_show  = substr($info->self_id,15);
 
             $info_good_info = $info->good_info;
-            foreach ($info_good_info as $k => $v){
-                $info_good_info[$k]['clod']=$tms_control_type[$v['clod']]??null;
-            }
+           
             $info->good_info = $info_good_info;
 
             $car_list = [];
