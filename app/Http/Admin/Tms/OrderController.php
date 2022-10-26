@@ -1711,7 +1711,7 @@ class OrderController extends CommonController{
                             $push_contnect = array('title' => "赤途承运端",'content' => $center_list , 'payload' => "订单信息");
                             $this->send_push_message($push_contnect,$data['send_shi_name']);
                         }
-
+                        dd($id);
                        if ($company_id) {
 //                           TmsOrderMoney::insert($money);
                            TmsOrderCost::insert($money_company);
