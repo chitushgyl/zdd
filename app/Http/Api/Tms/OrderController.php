@@ -400,7 +400,7 @@ class OrderController extends Controller{
         $good_weight_n = $request->input('good_weight');
         $good_volume_n = $request->input('good_volume');
         $dispatcher    = $request->input('dispatcher') ?? [];
-        $clod          = $request->input('clod');
+
         $more_money    = $request->input('more_money') ? $request->input('more_money') - 0 : null ;//多点费用
         $gather_time   = $request->input('gather_time')??null;
         $send_time     = $request->input('send_time')??null;
@@ -601,11 +601,7 @@ class OrderController extends Controller{
                         return $msg;
                     }
 
-                    if (empty($clod)) {
-                        $msg['code'] = 309;
-                        $msg['msg'] = '请选择温度！';
-                        return $msg;
-                    }
+
                 }
 
                 $send_t = '提货';
@@ -720,7 +716,7 @@ class OrderController extends Controller{
             $good_number = 0;
             $good_weight = 0;
             $good_volume = 0;
-            $clodss = [];
+
 
             $abccxxxxx = [];
             foreach ($dispatcher as $k => $v){
@@ -730,41 +726,41 @@ class OrderController extends Controller{
                 $good_weight+=$v['good_weight'];
                 $good_volume+=$v['good_volume'];
                 $good_name[] = $v['good_name'];
-                $clodss[] = $v['clod'];
+
                 $abcc222['good_name']   = $v['good_name'];
                 $abcc222['good_number'] = $v['good_number'];
                 $abcc222['good_weight'] = $v['good_weight'];
                 $abcc222['good_volume'] = $v['good_volume'];
-                $abcc222['clod']        = $v['clod'];
+
                 $abccxxxxx[] = $abcc222;
             }
 
             if($pick_flag == 'N' && $send_flag == 'N' && $order_type == 'line'){
                 $abcc222 = [];
-                $clodss = [];
+
                 $abccxxxxx = [];
                 $abcc222['good_name']   = $good_name_n;
                 $abcc222['good_number'] = $good_number_n;
                 $abcc222['good_weight'] = $good_weight_n;
                 $abcc222['good_volume'] = $good_volume_n;
-                $abcc222['clod']        = $clod;
+
                 $abccxxxxx[] = $abcc222;
                 $good_number = $good_number_n;
                 $good_weight = $good_weight_n;
                 $good_volume = $good_volume_n;
-                $clodss[] = $clod;
+
             }
 
             $gather = array_unique($gather);
             $send   = array_unique($send);
-            $clodss = array_unique($clodss);
+
 
             foreach ($gather as $k => $v){
                 $lki[$k]['good_number'] = 0;
                 $lki[$k]['good_weight'] = 0;
                 $lki[$k]['good_volume'] = 0;
                 $abccxx = [];
-                $clod = [];
+
                 foreach ($dispatcher as $kk => $vv){
                     if($v == $vv['gather_address_id']){
                         $lki[$k]['good_number']+=$vv['good_number'];
@@ -787,12 +783,12 @@ class OrderController extends Controller{
                         $abcc['good_number'] = $vv['good_number'];
                         $abcc['good_weight'] = $vv['good_weight'];
                         $abcc['good_volume'] = $vv['good_volume'];
-                        $abcc['clod']        = $vv['clod'];
+
                         $abccxx[] = $abcc;
-                        $clod[] = $vv['clod'];
+
                     }
                 }
-                $lki[$k]['clod'] = $clod;
+
                 $lki[$k]['good_josn'] = json_encode($abccxx,JSON_UNESCAPED_UNICODE);
             }
 //            dd($lki);
@@ -803,7 +799,7 @@ class OrderController extends Controller{
                 $lki2[$k]['good_weight'] = 0;
                 $lki2[$k]['good_volume'] = 0;
                 $abccxx2 = [];
-                $clod2 = [];
+
                 foreach ($dispatcher as $kk => $vv){
                     if($v == $vv['send_address_id']){
                         $lki2[$k]['good_number']+=$vv['good_number'];
@@ -826,14 +822,14 @@ class OrderController extends Controller{
                         $abcc2['good_number'] = $vv['good_number'];
                         $abcc2['good_weight'] = $vv['good_weight'];
                         $abcc2['good_volume'] = $vv['good_volume'];
-                        $abcc2['clod']        = $vv['clod'];
+
                         $abccxx2[] = $abcc2;
-                        $clod2[] = $vv['clod'];
+
                     }
                 }
 
                 $lki2[$k]['good_josn'] = json_encode($abccxx2,JSON_UNESCAPED_UNICODE);
-                $lki2[$k]['clod'] = $clod2;
+
             }
 
             /***现在处理收货地址的控制**/
@@ -958,7 +954,7 @@ class OrderController extends Controller{
                             $list['pick_flag']                = $pick_flag;
                             $list['send_flag']                = $send_flag;
                             $list['good_info']                = $v['good_josn'];
-                            $list['clod']                     = json_encode($v['clod'],JSON_UNESCAPED_UNICODE);
+
                             $list['pay_type']                 = $pay_type;
                             $list['remark']                   = $remark;
                             $list['order_status'] = 1;
@@ -1165,7 +1161,7 @@ class OrderController extends Controller{
                             $list['pick_flag']                  = $pick_flag;
                             $list['send_flag']                  = $send_flag;
                             $list['dispatch_flag']              = 'Y';
-                            $list['clod']                       = json_encode($clodss,JSON_UNESCAPED_UNICODE);
+
                             $list['pay_type']                   = $pay_type;
                             $list['remark']                     = $remark;
                             $list['order_status']               = 1;
@@ -1355,7 +1351,7 @@ class OrderController extends Controller{
                         $list['pick_flag']                  = $pick_flag;
                         $list['send_flag']                  = $send_flag;
                         $list['good_info']                  = $good_info;
-                        $list['clod']                       = json_encode($clodss,JSON_UNESCAPED_UNICODE);
+
                         $list['pay_type']                   = $pay_type;
                         $list['remark']                   = $remark;
                         $list['order_status'] = 1;
@@ -1551,7 +1547,7 @@ class OrderController extends Controller{
                             $list['pick_flag']                  = $pick_flag;
                             $list['send_flag']                  = $send_flag;
                             $list['good_info']                  = $v['good_josn'];
-                            $list['clod']                       = json_encode($v['clod'],JSON_UNESCAPED_UNICODE);
+
                             $list['pay_type']                   = $pay_type;
                             $list['remark']                     = $remark;
                             $list['order_status'] = 1;
@@ -1762,7 +1758,7 @@ class OrderController extends Controller{
                     $data['line_info']   = json_encode($line_info,JSON_UNESCAPED_UNICODE);
                     $data['info']        = json_encode($dispatcher,JSON_UNESCAPED_UNICODE);
                     $data['good_info']   = $good_info;
-                    $data['clod']        = json_encode($clodss,JSON_UNESCAPED_UNICODE);
+
                     $data['remark']      = $remark;
                     $data['app_flag']                   = $app_flag;
                     $data['send_time']   = $send_time;
@@ -1867,7 +1863,7 @@ class OrderController extends Controller{
                     $data['total_money']                = ($total_money - 0) * 100;
                     $data['info']                       = json_encode($dispatcher,JSON_UNESCAPED_UNICODE);
                     $data['good_info']                  = $good_info;
-                    $data['clod']                       = json_encode($clodss,JSON_UNESCAPED_UNICODE);
+
                     $data['pick_money']                 = ($pick_money - 0)*100;
                     $data['send_money']                 = ($send_money - 0)*100;
                     $data['price']                      = ($price - 0)*100;
@@ -1955,7 +1951,7 @@ class OrderController extends Controller{
                     $list['send_flag']                  = $send_flag;
                     $list['info']                       = json_encode($dispatcher,JSON_UNESCAPED_UNICODE);
                     $list['good_info']                  = $good_info;
-                    $list['clod']                       = json_encode($clodss,JSON_UNESCAPED_UNICODE);
+
                     $list['pay_type']                   = $pay_type;
                     $list['remark']                   = $remark;
                     $list['car_type']                   = $car_type;
