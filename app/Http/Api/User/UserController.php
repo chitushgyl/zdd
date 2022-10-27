@@ -483,12 +483,12 @@ class UserController extends Controller{
                         if ($user_info->type == 'TMS3PL' ||$user_info->type == 'company' || $user_info->type == 'business' || $user_info->type == 'dispatcher'){
                             $v->title_show = $user_info->group_name;
                         }elseif($user_info->type == 'driver'){
-                            $v->title_show = '免费开放企业权限+内部管理系统使用';
+                            $v->title_show = '';
                         }else{
-                            $v->title_show = '免费开放企业权限+内部管理系统使用';
+                            $v->title_show = '';
                         }
                     }else{
-                        $v->title_show = '免费开放企业权限+内部管理系统使用';
+                        $v->title_show = '';
                     }
 
                     break;
