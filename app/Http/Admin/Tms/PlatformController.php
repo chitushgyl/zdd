@@ -1141,7 +1141,7 @@ class PlatformController extends CommonController{
 
             }
             if($v->id == 793){
-                $button_info1[]=$v;
+                $button_info1[] = $v;
                 $button_info2[] = $v;
             }
 
@@ -1154,6 +1154,8 @@ class PlatformController extends CommonController{
             $v->button_info=$button_info;
             if ($v->first_trail == 'Y'){
                 $v->button_info=$button_info2;
+            }else{
+                $v->button_info=$button_info1;
             }
         }
 
