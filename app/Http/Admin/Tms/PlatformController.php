@@ -1088,7 +1088,7 @@ class PlatformController extends CommonController{
 
         $where=get_list_where($search);
 
-        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch'];
+        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
@@ -1133,7 +1133,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img'];
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
