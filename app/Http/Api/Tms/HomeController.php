@@ -302,6 +302,10 @@ class HomeController extends Controller {
     }
 
     /**
+     *
+     * */
+
+    /**
      * 优惠充电 /api/home/getChargeAddress
      * */
     public function getChargeAddress(Request $request){

@@ -1120,6 +1120,7 @@ class PlatformController extends CommonController{
             $v->id_front   = img_for($v->id_front,'no_json');
             $v->id_back    = img_for($v->id_back,'no_json');
             $v->auth_serch = img_for($v->auth_serch,'no_json');
+            $v->button_info=$button_info;
         }
 
         $msg['code']=200;
@@ -1190,6 +1191,79 @@ class PlatformController extends CommonController{
 
         return $msg;
 
+    }
+
+    /**
+     * 贷款申请审核  /tms/platform/loanPass
+     * */
+    public function loanPass(Request $request){
+        $now_time=date('Y-m-d H:i:s',time());
+        $operationing = $request->get('operationing');//接收中间件产生的参数
+        $user_info          = $request->get('user_info');//接收中间件产生的参数
+        $table_name='tms_connact';
+        $input              =$request->all();
+        $self_id=$request->input('self_id'); //数据ID
+        $type = $request->input('type');//操作类别:pass 通过  fail失败
+        $reason = $request->input('reason');
+        $rules=[
+            'self_id'=>'required',
+        ];
+        $message=[
+            'self_id.required'=>'请选择要操作的数据',
+        ];
+//        $input['self_id'] = $self_id = 'atte_202104221343175828707184';
+//        $input['type'] =  $type = 'pass';
+        $validator=Validator::make($input,$rules,$message);
+        if($validator->passes()) {
+            $select = ['self_id','address','tel','state','name','email','sheng_name','shi_name','qu_name','total_user_id','login_account','identity_id','type'];
+            $info = TmsAttestation::where('self_id',$self_id)->select($select)->first();
+            $old_info = [
+                'state'=>$info->state,
+                'update_time'=>$now_time
+            ];
+            switch($type){
+                case 'pass':
+                    $new_info['update_time'] = $now_time;
+                    $new_info['state'] = 'Y';
+                    $id = TmsConnact::where('self_id',$self_id)->update($new_info);
+
+                    break;
+                case 'fail':
+                    $new_info['update_time'] = $now_time;
+                    $new_info['state'] = 'N';
+                    $new_info['reason'] = $reason;
+                    $id = TmsConnact::where('self_id',$self_id)->update($new_info);
+                    break;
+
+            }
+            $operationing->access_cause='通过/失败';
+            $operationing->table=$table_name;
+            $operationing->table_id=$self_id;
+            $operationing->now_time=$now_time;
+            $operationing->old_info=$old_info;
+            $operationing->new_info=$new_info;
+            if ($id){
+                $msg['code']=200;
+                $msg['msg']='操作成功！';
+                $msg['data']=$new_info;
+                return $msg;
+            }else{
+                $msg['code']=303;
+                $msg['msg']='操作失败！';
+                return $msg;
+            }
+
+        }else{
+            //前端用户验证没有通过
+            $erro=$validator->errors()->all();
+            $msg['code']=300;
+            $msg['msg']=null;
+            foreach ($erro as $k => $v){
+                $kk=$k+1;
+                $msg['msg'].=$kk.'：'.$v.'</br>';
+            }
+            return $msg;
+        }
     }
 
     /**
