@@ -1170,7 +1170,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail'];
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
@@ -1240,6 +1240,7 @@ class PlatformController extends CommonController{
         $input              =$request->all();
         $self_id=$request->input('self_id'); //数据ID
         $type = $request->input('type');//操作类别:pass 通过  fail失败
+        $trail_type = $request->input('trail_type');// 预审 Y  or  E
         $reason = $request->input('reason');
         $rules=[
             'self_id'=>'required',
@@ -1251,8 +1252,8 @@ class PlatformController extends CommonController{
 //        $input['type'] =  $type = 'pass';
         $validator=Validator::make($input,$rules,$message);
         if($validator->passes()) {
-            $select = ['self_id','address','tel','state','name','email','sheng_name','shi_name','qu_name','total_user_id','login_account','identity_id','type'];
-            $info = TmsAttestation::where('self_id',$self_id)->select($select)->first();
+            $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
+            $info = TmsConnact::where('self_id',$self_id)->select($select)->first();
             $old_info = [
                 'state'=>$info->state,
                 'update_time'=>$now_time
@@ -1260,13 +1261,21 @@ class PlatformController extends CommonController{
             switch($type){
                 case 'pass':
                     $new_info['update_time'] = $now_time;
-                    $new_info['state'] = 'Y';
+                    if ($trail_type == 'Y'){
+                        $new_info['first_trail'] = 'Y';
+                    }else{
+                        $new_info['pass'] = 'Y';
+                    }
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
 
                     break;
                 case 'fail':
                     $new_info['update_time'] = $now_time;
-                    $new_info['state'] = 'N';
+                    if ($trail_type == 'Y'){
+                        $new_info['first_trail'] = 'N';
+                    }else{
+                        $new_info['pass'] = 'N';
+                    }
                     $new_info['reason'] = $reason;
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
                     break;
