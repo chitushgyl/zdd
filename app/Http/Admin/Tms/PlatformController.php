@@ -1115,12 +1115,46 @@ class PlatformController extends CommonController{
                 $data['group_show']='Y';
                 break;
         }
+        $button_info1 = [];
+        $button_info2 = [];
+        $button_info3 = [];
+        $button_info4 = [];
+        $button_info5 = [];
+        $button_info6 = [];
+        $button_info7 = [];
+        $button_info8 = [];
+        foreach ($button_info as $k => $v){
+            if($v->id == 788){
+                $button_info1[]=$v;
+                $button_info2[] = $v;
+            }
+            if($v->id == 789){
+                $button_info2[] = $v;
+            }
+            if($v->id == 790){
+                $button_info2[] = $v;
+            }
+            if($v->id == 791){
+
+            }
+            if($v->id == 792){
+
+            }
+            if($v->id == 793){
+                $button_info1[]=$v;
+                $button_info2[] = $v;
+            }
+
+        }
 
         foreach ($data['items'] as $k=>$v) {
             $v->id_front   = img_for($v->id_front,'no_json');
             $v->id_back    = img_for($v->id_back,'no_json');
             $v->auth_serch = img_for($v->auth_serch,'no_json');
             $v->button_info=$button_info;
+            if ($v->first_trail == 'Y'){
+                $v->button_info=$button_info2;
+            }
         }
 
         $msg['code']=200;
