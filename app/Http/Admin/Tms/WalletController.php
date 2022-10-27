@@ -19,9 +19,9 @@ class WalletController extends CommonController{
         $data['button_info']    =$request->get('anniu');
         $data['user_info']      =$request->get('user_info');
 
-        $money = UserCapital::where('group_code',$data['user_info']->group_code)->select('money')->first();
-        $msg['money'] =  number_format($money->money/100,2);
-        $msg['group_name'] = $data['user_info']->group_name;
+//        $money = UserCapital::where('group_code',$data['user_info']->group_code)->select('money')->first();
+//        $msg['money'] =  number_format($money->money/100,2);
+//        $msg['group_name'] = $data['user_info']->group_name;
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
         $msg['data']=$data;
