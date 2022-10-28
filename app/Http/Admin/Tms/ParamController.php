@@ -14,6 +14,7 @@ class ParamController extends CommonController{
     public function  paramList(Request $request){
         $data['page_info']      =config('page.listrows');
         $data['button_info']    =$request->get('anniu');
+        $data['user_info']    =$request->get('user_info');
 
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
