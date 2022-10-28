@@ -61,7 +61,7 @@ class CompanyController extends CommonController{
 
         $where=get_list_where($search);
 
-        $select=['self_id','group_code','group_name','name','leader_phone','tel','address',
+        $select=['self_id','group_code','group_name','name','leader_phone','tel','address','place_num',
             'business_type','use_flag','create_user_name','create_time',
             'domain_name','front_name','company_image_url','expire_time','father_group_code','group_qr_code','user_number','company_type'];
 
@@ -143,7 +143,7 @@ class CompanyController extends CommonController{
             ['self_id','=',$self_id],
         ];
 
-        $select=['self_id','business_type','group_name','company_image_url','name','leader_phone','tel','address','longitude','dimensionality','floating_flag','user_number','company_type'];
+        $select=['self_id','business_type','place_num','group_name','company_image_url','name','leader_phone','tel','address','longitude','dimensionality','floating_flag','user_number','company_type'];
         $data['info']=SystemGroup::where($where)->select($select)->first();
 
 
@@ -202,6 +202,7 @@ class CompanyController extends CommonController{
         $floating_flag          =$request->input('floating_flag');
         $user_number            ='9999';
         $company_type            =$request->input('company_type');
+        $place_num            =$request->input('place_num');
         // $input['group_name']    =$group_name='4878787878';
 
 
@@ -223,13 +224,31 @@ class CompanyController extends CommonController{
                 ['delete_flag','=','Y'],
             ];
         }
-		//dump($name_where);
+
         $group = SystemGroup::where($name_where)->count();
-		//dump($group);
-		
+
         if ($group>0){
             $msg['code'] = 308;
             $msg['msg'] = '公司名称不能重复！';
+            return $msg;
+        }
+
+        if($self_id){
+            $chnanel_where=[
+                ['self_id','!=',$self_id],
+                ['place_num','=',$place_num],
+                ['delete_flag','=','Y'],
+            ];
+        }else{
+            $chnanel_where=[
+                ['place_num','=',$place_num],
+                ['delete_flag','=','Y'],
+            ];
+        }
+        $place = SystemGroup::where($name_where)->count();
+        if ($place>0){
+            $msg['code'] = 308;
+            $msg['msg'] = '渠道公司编号不能重复！';
             return $msg;
         }
         $validator=Validator::make($input,$rules,$message);
@@ -252,6 +271,7 @@ class CompanyController extends CommonController{
             $data['city']               =$city;
             $data['address']            =$address;
             $data['company_type']       =$company_type;
+            $data['place_num']          =$place_num;
 
             $data['company_image_url']=img_for($company_image_url,'in');
 
@@ -834,7 +854,7 @@ class CompanyController extends CommonController{
         $self_id=$request->input('self_id');
         $table_name='system_group';
         $select=['self_id','group_code','group_name','name','leader_phone','tel','address',
-            'business_type','use_flag','create_user_name','create_time',
+            'business_type','use_flag','create_user_name','create_time','place_num',
             'domain_name','front_name','company_image_url','expire_time','father_group_code','group_qr_code','user_number','company_type'];
         $info=$details->details($self_id,$table_name,$select);
         $tms_company_type   =array_column(config('tms.tms_company_type'),'name','key');
