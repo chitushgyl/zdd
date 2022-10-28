@@ -1079,11 +1079,13 @@ class PlatformController extends CommonController{
         $page           =$request->input('page')??1;
         $name           =$request->input('name');
         $address        =$request->input('address');
+        $place_num        =$request->input('place_num');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'=','name'=>'channel_way','value'=>$place_num],
         ];
 
         $where=get_list_where($search);

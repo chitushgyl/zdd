@@ -5,6 +5,7 @@ namespace App\Http\Api\Tms;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DetailsController as Details;
+use App\Models\Group\SystemGroup;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
@@ -172,7 +173,7 @@ class HomeController extends Controller {
     }
 
     /*
-     * 联系客服
+     * 申请贷款
      * */
     public function customer_service(Request $request){
         $now_time       =date('Y-m-d H:i:s',time());
@@ -248,6 +249,20 @@ class HomeController extends Controller {
                 'channel_way.required'=>'请填写推荐渠道公司名称',
                 'auth_serch_company.required'=>'请上传公司授权书',
             ];
+        }
+
+        if($channel_way){
+            $name_where=[
+                ['place_num','=',$channel_way],
+                ['delete_flag','=','Y'],
+            ];
+        }
+        $group = SystemGroup::where($name_where)->count();
+
+        if ($group<=0){
+            $msg['code'] = 308;
+            $msg['msg'] = '请填写正确的渠道公司！';
+            return $msg;
         }
         $validator=Validator::make($input,$rules,$message);
 
