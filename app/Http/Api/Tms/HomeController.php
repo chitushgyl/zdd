@@ -251,6 +251,7 @@ class HomeController extends Controller {
             ];
         }
 
+
         if($channel_way){
             $name_where=[
                 ['place_num','=',$channel_way],

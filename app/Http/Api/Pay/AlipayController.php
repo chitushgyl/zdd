@@ -233,7 +233,7 @@ class AlipayController extends Controller{
      * app支付宝支付
      * */
     public function appAlipay(Request $request){
-        $config    = config('tms.alipay_config');//引入配置文件参数
+        $config    = config('tms.alipay_config_user');//引入配置文件参数
         $input     = $request->all();
         $user_info = $request->get('user_info');//接收中间件产生的参数
         $type      = $request->input('type'); // 1  2  3
@@ -292,6 +292,78 @@ class AlipayController extends Controller{
         $request->setBizContent($bizcontent);
         //这里和普通的接口调用不同，使用的是sdkExecute
         $response = $aop->sdkExecute($request);
+        return $response;
+    }
+
+    public function testAlipay(Request $request){
+        $config    = config('tms.alipay_config');//引入配置文件参数
+        $input     = $request->all();
+        $user_info = $request->get('user_info');//接收中间件产生的参数
+        $type      = $request->input('type'); // 1  2  3
+        $pay_type  = array_column(config('tms.alipay_notify'),'notify','key');
+        $self_id   = $request->input('self_id');// 订单ID
+        $price     = $request->input('price');// 支付金额
+//        $price     = 0.01;
+        if (!$user_info){
+            $msg['code'] = 401;
+            $msg['msg']  = '未登录，请完成登录！';
+            return $msg;
+        }
+        /**虚拟数据
+        $user_id = 'user_15615612312454564';
+        $price = 0.01;
+        $type = 1;
+        $self_id = 'order_202103090937308279552773';
+         * */
+        if ($user_info->type == 'user'){
+            $user_id = $user_info->total_user_id;
+        }else{
+            $user_id = $user_info->group_code;
+        }
+        if($type == 3){
+            $payment = TmsPayment::where('dispatch_id',$self_id)->where('dispatch_id','!=','')->select('dispatch_id','pay_result','paytype','state')->first();
+            if($payment){
+                $msg['code'] = 302;
+                $msg['msg']  = '此订单不能重复上线';
+                return $msg;
+            }
+        }
+        include_once base_path( '/vendor/alipay/aop/AopCertClient.php');
+        include_once base_path( '/vendor/alipay/aop/request/AlipayOpenPublicTemplateMessageIndustryModifyRequest.php');
+        $c = new \AopCertClient();
+        $appCertPath =  base_path( 'vendor\alipay\cert\appCertPublicKey.crt');
+        $alipayCertPath =  base_path( 'vendor\alipay/cert\alipayCertPublicKey.crt');
+        $rootCertPath =  base_path( 'vendor\alipay\cert\alipayRootCert.crt');
+//dd($appCertPath);
+        $c->gatewayUrl = "https://openapi.alipay.com/gateway.do";
+        $c->appId = $config['app_id'];
+        $c->rsaPrivateKey = $config['merchant_private_key'];
+        $c->format = $config['format'];
+        $c->charset= $config['charset'];
+        $c->signType= $config['sign_type'];
+        $subject = '订单支付';
+        //调用getPublicKey从支付宝公钥证书中提取公钥
+        $c->alipayrsaPublicKey = $c->getPublicKey($alipayCertPath);
+        //是否校验自动下载的支付宝公钥证书，如果开启校验要保证支付宝根证书在有效期内
+        $c->isCheckAlipayPublicCert = true;
+        //调用getCertSN获取证书序列号
+        $c->appCertSN = $c->getCertSN($appCertPath);
+        //调用getRootCertSN获取支付宝根证书序列号
+        $c->alipayRootCertSN = $c->getRootCertSN($rootCertPath);
+
+        //实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.open.public.template.message.industry.modify
+        $request = new \AlipayOpenPublicTemplateMessageIndustryModifyRequest();
+        //SDK已经封装掉了公共参数，这里只需要传入业务参数
+        //此次只是参数展示，未进行字符串转义，实际情况下请转义
+        $request->setBizContent = "{" .
+        "    \"body\":\"支付宝支付\"," .
+        "    \"subject\":\"$subject\"," .
+        "    \"out_trade_no\":\"$self_id\"," .
+        "    \"total_amount\":\"$price\"," .
+        "    \"product_code\":\"QUICK_MSECURITY_PAY\"," .
+        "    \"passback_params\":\"$user_id\"" .
+        " }";
+        $response= $c->sdkExecute($request);
         return $response;
     }
 
@@ -1579,6 +1651,7 @@ class AlipayController extends Controller{
         $input = $request->all();
         $user_info = $request->get('user_info');
         $price = $request->input('price'); //充值金额
+        $type = $request->input('type');
         if (empty($price)){
             $msg['code'] = 301;
             $msg['msg']  = '请填写价格';
@@ -1602,12 +1675,16 @@ class AlipayController extends Controller{
         $aop = new \AopClient();
         $request = new \AlipayTradeAppPayRequest();
         $aop->gatewayUrl = "https://openapi.alipay.com/gateway.do";
-        $aop->appId = "2017052307318743";
-        $aop->rsaPrivateKey = 'MIIEpAIBAAKCAQEAuWqafyecwj1VxcHQjFHrPIqhKrfMPjQRVRTs7/PvGlCXOxV34KaAop4XWEBKgvWhdQX2JkMDLSwPkH790TBJVS84/zQ6sjanpHjgT82/AimuS+/Vk8pB/pAfnOnRN3dhe6y2i9kzJPU62Uj9qn5jJXbWJhyM16Zxdk7GBOChis3C3KvB2WN8qAQawqfUvgHRm/yUgNfVUutKRMdDdQxQypwxkEP50+U9qKeSQecZRyo6xmJ5CWbULQ7FpV5q6lmM7SbyBuyDVk7z4itLIgE8qpt6B3cp9Qm3U3f6DoVJA2LAjinP4v6kNVb/f5qu8VpmR0DD+dRJ1+ujDz1EC/f/lwIDAQABAoIBAHrS0DcM8X2GDcxrQA/DsDUxi+N1T1mhOh4HN5EYILpoylU8OmXZRfrzCHnQVMt9lQ+k/FKKL4970W+hf9dTyjAgkPwVCBDHvbNo0wZqP25aV/g7jlpRL/hGVnqmNI4uiafYWDA5l/SScgI/pLGM+XZ2yxMB9JZhzmVVdz0B5GDCHcjQUkY3//8Tpgw6ylngrq67KjWDbZPAZQHcpj/hdYPOu7Z1kXp30jtdEZi6S+7ZJe/AWMSuEtwWsM53ZOyxqPjSwbW8XfWHHbG3yKF6sngCmwRpwX5rp1EjSsVhA5rbpCM0jbYCKp977XwkGtG6xAOydZdz0WHyirDUTA3PMTECgYEA4lzvyfcg0SyaOWVszwxcWntVm6sQG7deaSlW92Urhy7qaDnv4Ad8TEe0M0QGVllnZUDJA3x8NzoD5DlFROUGZpI/uJk5a0dQlvMbyzS2rx2v4TP19Xm5D7iQk0RK5Zry0K/Fj1kZusIVm3qwsl1DlunAfGipZ1TV0C7QNUJcW0kCgYEA0bE/3ljnSPsKjpc+projOuaLqf7+0x3ITaYle60MbwZrjUnX3cSwbqN3Iu12Npa3mI+RwTyDifFgWB/8hFoqTecFGDnxRa1e7DLlJX9FkIMtoroVsDJUMD+HUx01t9V8fEqVPNyRmnbFyXfdHrRb7zYefwuPZcoE18reADc9o98CgYB1zDl5F+L7F8P2ZIK4SM1yxMYrKV1LnyRBg6LfQcXiJpcTwDrFkf+sTpBHMXo+y23UMl+pMcoOj2FhDjCvBqRLEoaYkRxhaI5Wz5LCL991x/Q0NO8lXL/in4CVMq/rRrRfx2j/DTYni0LlU3bKi2BWE7T4yRqHTI2sNgBiBvO7CQKBgQCDsHNR6jdmR/J7VlTMVH2nkf4IRtI2N7ABw+QqZaU3XKrS0ps09T9wXEyHrOXepoyqzQ9WcfCSAvrknUHyxMVoozs52bnCbnz8jYIHKITBmwBf/8l7HEBvBJayBdgkmXhSfmx3CnaOsSTJv/MoQ1CxTCWe1924qUSdWRROwmJ9tQKBgQCgWUnO0z1O46N1p66gcA0NrRMFsncotg42MipvUpCrMN6lJ80/H7Kj1tGOizJazLXPKN9NKl/lco0xJyAyZS4vFacZXbH2OO0jHyfovPblSY5O10g3d1PC4mbZ/wd4HU4QVO21+U5dIH/HPubhOGQWcpAO+3Fqxx7VFuaZPbsC7g==';
+        if ($type == 'user'){
+            $aop->appId = "2021003158683126";
+        }else{
+            $aop->appId = "2021003159610134";
+        }
+        $aop->rsaPrivateKey = 'MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCnKSBGdRUuaJgejEMO1rslCpmRanEVZnjFrdZ5CUWLHm+lsTCBVH0KuARmtEtYdBBKZaYOuhmWs0BTuLNWeiESZpraUkE42NyP7p7jMwi/nIeVN3MBvlggNfUI/RivdLk6n0oknm/B12Ao227PTVsJGYR+YKWfMDNEFcHFbMo22Of8JwsHixeDZRjrUo1FuQqXCyiUKpSRwqnomvx5czDDcIUJIcOnrugj+M2+9Opk1EsEXICiIZZUMHgyBS0K+0I8lDuxCTLPY9jqq6WdfCSvuaygJPmjD9GjfKF7zwNHvNcLGPgpvdLs7EzD6tR6fk8HTNHmVhj7tKdRTJFjh6M9AgMBAAECggEBAJlbTKX3MniCMtULv1W0wLqp79uN+LM2cKSC6JngXLHWOX2cgrCUL6eOzVLgI6PBz1RBz0gBigpM5z4n3DgBEahNA9I51mZt5mQR+ijcoDESTP0jgtpdo4Hhnq0hbe1CO9FBZAcWZ9dBXZH+Rrne8R73DyvWRPw3f0D+aOhT92y6s64BEm7UKf57awN2o8bSLFceF4e5+aDPFaiQDIwkyF5f0DeEcdqyjSwQ/7zI6x3JF+/RfwzYPCRwYL7Mded0LiCYUYjPwLEYIchKCFPtgU3ljzhAekzJah1hSTs/2M98B7m3XG/xRimYH4eivinADVS+DGJ1TrpdAs7td1T8WaECgYEA4NsAGF6QYHLIjAiOBGL4JwyRSsxburK7LzY2mhE6mkxjbiWukT7a2B/+BpKnO4JfQ45P3X3faCDiZePseyY93CB2BKxx6uE7l4VRCLpqs79y0EJ2xnMIO1jx04Z/xut8XyfUJQfsq2AGVqI6/XP2n7phi4ffCbE8RAzM14Q9YPUCgYEAvlBdF6kmwRXB5/gWhZWBJiCapgre0yYpQ03uQFo5aV2k4sahYkd/IgK38+byBqbdN/ZJv/7J6AMUNiaUOBY7ayxePjv9/nD+7gfdxqBXNVuG6iLuxF+CcSN2YsL9lFrVrGIandYCF9kjHZtNGA+t2e9FficJ1FWoF2TXCQtFLCkCgYBF7hZDffVs6YXRdz+jwZvnmRL+rjvA/qEUd8nXdJBDOIqb0QBPj7rECH8aUDXOXid+fR39ho4adk+y3IXJbwVCFp5dqbvsDoxX/VBMZJ2WtW3hsyn5YgEnY+whmuzWUpplhZ+GvMYwLjcKbn3mIVCMMIzxthn5i7NwfoKebDQimQKBgF0ANJ3NYUzV7w4GpCrfZl9Va31crosMiPmE6bq03H1q75qKam72dWAPaAlegENT46LnTh7uyYgBiSz1KVVHN/4ljmBnPLXMTifP3EamMDe45HMiYv+/lKTpKX8Vvoly4hv9TPh4jklNKOXc8I2ji9eGH7WIKjuDKENWWebnhQQRAoGBAJn9C4HKkziQyhMQmqEy585kIDV8KxjH82WGAslNn2keS1PuJWOnuyR1ayWTI/eNDrpSPEQ8zAOGXiq2ojmU+ELrY45Gu5Mvsh9hAYq5lZuU82q3GZzPhkp8yt02lfCBrMGIhZBBWXLLz0QefDGT+Z8T4PEJyJT5hzs/WUVd3vn/';
         $aop->format = "json";
         $aop->charset = "UTF-8";
         $aop->signType = "RSA2";
-        $aop->alipayrsaPublicKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuQzIBEB5B/JBGh4mqr2uJp6NplptuW7p7ZZ+uGeC8TZtGpjWi7WIuI+pTYKM4XUM4HuwdyfuAqvePjM2ch/dw4JW/XOC/3Ww4QY2OvisiTwqziArBFze+ehgCXjiWVyMUmUf12/qkGnf4fHlKC9NqVQewhLcfPa2kpQVXokx3l0tuclDo1t5+1qi1b33dgscyQ+Xg/4fI/G41kwvfIU+t9unMqP6mbXcBec7z5EDAJNmDU5zGgRaQgupSY35BBjW8YVYFxMXL4VnNX1r5wW90ALB288e+4/WDrjTz5nu5yeRUqBEAto3xDb5evhxXHliGJMqwd7zqXQv7Q+iVIPpXQIDAQAB';
+        $aop->alipayrsaPublicKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApykgRnUVLmiYHoxDDta7JQqZkWpxFWZ4xa3WeQlFix5vpbEwgVR9CrgEZrRLWHQQSmWmDroZlrNAU7izVnohEmaa2lJBONjcj+6e4zMIv5yHlTdzAb5YIDX1CP0Yr3S5Op9KJJ5vwddgKNtuz01bCRmEfmClnzAzRBXBxWzKNtjn/CcLB4sXg2UY61KNRbkKlwsolCqUkcKp6Jr8eXMww3CFCSHDp67oI/jNvvTqZNRLBFyAoiGWVDB4MgUtCvtCPJQ7sQkyz2PY6qulnXwkr7msoCT5ow/Ro3yhe88DR7zXCxj4Kb3S7OxMw+rUen5PB0zR5lYY+7SnUUyRY4ejPQIDAQAB';
         $bizcontent = json_encode([
             'body' => '支付宝充值',
             'subject' => '余额支付宝充值',
