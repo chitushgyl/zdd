@@ -250,6 +250,24 @@ class HomeController extends Controller {
                 'auth_serch_company.required'=>'请上传公司授权书',
             ];
         }
+        $where = [];
+        if($user_info->total_user_id){
+            $where=[
+                ['total_user_id','=',$user_info->total_user_id],
+                ['delete_flag','=','Y'],
+            ];
+        }else{
+            $where=[
+                ['group_code','=',$user_info->group_code],
+                ['delete_flag','=','Y']
+            ];
+        }
+        $connact_count = TmsConnact::where($where)->count();
+        if ($connact_count >0){
+            $msg['code'] = 307;
+            $msg['msg'] = '您已申请，请勿重复提交！';
+            return $msg;
+        }
 
 
         if($channel_way){
@@ -257,14 +275,15 @@ class HomeController extends Controller {
                 ['place_num','=',$channel_way],
                 ['delete_flag','=','Y'],
             ];
-        }
-        $group = SystemGroup::where($name_where)->count();
+            $group = SystemGroup::where($name_where)->count();
 
-        if ($group<=0){
-            $msg['code'] = 308;
-            $msg['msg'] = '请填写正确的渠道公司！';
-            return $msg;
+            if ($group<=0){
+                $msg['code'] = 308;
+                $msg['msg'] = '请填写正确的渠道公司！';
+                return $msg;
+            }
         }
+
         $validator=Validator::make($input,$rules,$message);
 
         if($validator->passes()){
@@ -326,7 +345,7 @@ class HomeController extends Controller {
      * */
     public function getChargeAddress(Request $request){
         $user_info     = $request->get('user_info');//接收中间件产生的参数
-        $project_type       =$request->get('project_type');
+        $project_type  = $request->get('project_type');
         //接收数据
         $address     = $request->input('address');
         $name     = $request->input('name');
@@ -353,8 +372,49 @@ class HomeController extends Controller {
     }
 
     /**
-     *
+     * 我的贷款
      * */
+    public function myLoan(Request $request){
+        $user_info     = $request->get('user_info');//接收中间件产生的参数
+        $project_type  = $request->get('project_type');
+        $total_user_id = $user_info->total_user_id;
+
+        /**接收数据*/
+        $num      = $request->input('num')??10;
+        $page     = $request->input('page')??1;
+        $listrows = $num;
+        $firstrow = ($page-1)*$listrows;
+
+        $search = [
+            ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'=','name'=>'total_user_id','value'=>$total_user_id],
+            ['type'=>'=','name'=>'group_code','value'=>$user_info->group_code],
+        ];
+
+
+        $where = get_list_where($search);
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id'];
+        $data['info'] = TmsConnact::where($where)
+            ->offset($firstrow)
+            ->limit($listrows)
+            ->orderBy('create_time', 'desc')
+            ->select($select)
+            ->get();
+
+        foreach ($data['info'] as $k=>$v) {
+            $v->id_front   = img_for($v->id_front,'no_json');
+            $v->id_back    = img_for($v->id_back,'no_json');
+            $v->auth_serch = img_for($v->auth_serch,'no_json');
+            $v->auth_serch_company = img_for($v->auth_serch_company,'no_json');
+            $v->hold_img = img_for($v->hold_img,'no_json');
+
+        }
+        $msg['code'] = 200;
+        $msg['msg']  = "数据拉取成功";
+        $msg['data'] = $data;
+
+        return $msg;
+    }
 
 
 }

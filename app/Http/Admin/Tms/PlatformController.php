@@ -502,7 +502,7 @@ class PlatformController extends CommonController{
         $operationing->now_time         =$now_time;
         $operationing->type             ='add';
         $user_info = $request->get('user_info');//接收中间件产生的参数
-        $input              =$request->all();
+        $input                          =$request->all();
 
         /** 接收数据*/
         $self_id            =$request->input('self_id');
@@ -1170,7 +1170,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
+        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
