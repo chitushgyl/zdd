@@ -2210,9 +2210,9 @@ class OrderController extends CommonController{
             $order_details2['value'] = $info->pay_state;
             $order_details2['color'] = '#FF7A1A';
 
-            $order_details4['name'] = '收货时间';
-            $order_details4['value'] = $info->gather_time;
-            $order_details4['color'] = '#000000';
+//            $order_details4['name'] = '收货时间';
+//            $order_details4['value'] = $info->gather_time;
+//            $order_details4['color'] = '#000000';
             if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
                 $order_details3['name'] = '装车时间';
                 $order_details3['value'] = $info->send_time;
