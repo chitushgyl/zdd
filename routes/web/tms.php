@@ -384,6 +384,7 @@ Route::group([
     Route::any('/platform/loanDetails','PlatformController@loanDetails');//贷款申请详情
     Route::any('/platform/delLoan','PlatformController@delLoan');//删除贷款申请
     Route::any('/platform/loanPass','PlatformController@loanPass');//贷款申请审核
+    Route::any('/platform/carView','PlatformController@carView');//车辆详情
 });
 
 

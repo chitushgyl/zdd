@@ -35,23 +35,27 @@ class HomeController extends Controller {
       public function carList(Request $request){
           $user_info     = $request->get('user_info');//接收中间件产生的参数
           $project_type       =$request->get('project_type');
-          $total_user_id = $user_info->total_user_id;
-          $tms_car_possess_type = array_column(config('tms.tms_car_possess_type'),'name','key');
-          $tms_control_type     = array_column(config('tms.tms_control_type'),'name','key');
+
           /**接收数据*/
           $num      = $request->input('num')??10;
           $page     = $request->input('page')??1;
+          $car_type     = $request->input('car_type');
+          $brand_type   = $request->input('brand_type');
           $listrows = $num;
           $firstrow = ($page-1)*$listrows;
 
           $search = [
               ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
-              ['type'=>'=','name'=>'total_user_id','value'=>$total_user_id],
+              ['type'=>'=','name'=>'car_type','value'=>$car_type],
+              ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
           ];
 
           $where = get_list_where($search);
           $select = ['self_id','type','brand','car_type','create_time','update_time','price','view','car_name','picture','param'];
-          $data['info'] = TmsCar::where($where)
+          $select1 = ['self_id','parame_name'];
+          $data['info'] = AppCar::with(['tmsCarType'=>function($query)use($select1){
+              $query->select($select1);
+          }])->where($where)
               ->offset($firstrow)
               ->limit($listrows)
               ->orderBy('create_time', 'desc')
@@ -60,6 +64,7 @@ class HomeController extends Controller {
 
           foreach ($data['info'] as $k=>$v) {
               $v->picture = img_for($v->picture,'more');
+              $v->car_type_show = $v->tmsCarType->parame_name;
           }
           $msg['code'] = 200;
           $msg['msg']  = "数据拉取成功";
@@ -126,16 +131,14 @@ class HomeController extends Controller {
             ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
         ];
         $where=get_list_where($search);
-        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name'];
+        $select = ['self_id','type','brand','car_type','create_time','price','view','car_name','picture'];
         $select1 = ['self_id','parame_name'];
         $info = AppCar::with(['tmsCarType'=>function($query)use($select1){
             $query->select($select1);
         }])->where($where)->select($select)->get();
 
         if($info){
-//            foreach($info as $k => $v){
-//
-//            }
+
         }
 
         $msg['code'] = 200;
