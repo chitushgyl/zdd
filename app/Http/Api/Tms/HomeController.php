@@ -59,9 +59,7 @@ class HomeController extends Controller {
               ->get();
 
           foreach ($data['info'] as $k=>$v) {
-              $v->car_possess_show =  $tms_car_possess_type[$v->car_possess] ?? null;
-
-
+              $v->picture = img_for($v->picture,'more');
           }
           $msg['code'] = 200;
           $msg['msg']  = "数据拉取成功";

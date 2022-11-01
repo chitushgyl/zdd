@@ -1075,15 +1075,21 @@ class PlatformController extends CommonController{
         /**接收数据*/
         $num            =$request->input('num')??10;
         $page           =$request->input('page')??1;
+        $connact        =$request->input('connact');
+        $type           =$request->input('type');
+        $place_num      =$request->input('place_num');
         $name           =$request->input('name');
-        $address        =$request->input('address');
-        $place_num        =$request->input('place_num');
+        $pass           =$request->input('pass');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
             ['type'=>'=','name'=>'channel_way','value'=>$place_num],
+            ['type'=>'=','name'=>'type','value'=>$type],
+            ['type'=>'=','name'=>'connact','value'=>$connact],
+            ['type'=>'=','name'=>'name','value'=>$name],
+            ['type'=>'=','name'=>'pass','value'=>$pass],
         ];
 
         $where=get_list_where($search);
@@ -1310,6 +1316,10 @@ class PlatformController extends CommonController{
             return $msg;
         }
     }
+
+    /**
+     * 修改贷款审核
+     * */
 
     /**
      * 车辆详情
