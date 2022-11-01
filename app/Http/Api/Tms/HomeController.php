@@ -50,7 +50,7 @@ class HomeController extends Controller {
           ];
 
           $where = get_list_where($search);
-          $select = ['self_id','car_brand'];
+          $select = ['self_id','type','brand','car_type','create_time','update_time','price','view','car_name','picture','param'];
           $data['info'] = TmsCar::where($where)
               ->offset($firstrow)
               ->limit($listrows)
