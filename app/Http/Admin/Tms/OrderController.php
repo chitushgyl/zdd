@@ -2269,14 +2269,14 @@ class OrderController extends CommonController{
 
             if ($info->order_type == 'vehicle' || $info->order_type == 'lcl' || $info->order_type == 'lift'){
                 $order_details[] = $order_details3;
-                $order_details[]= $order_details4;
+//                $order_details[]= $order_details4;
                 $order_details[]= $order_details5;
                 $order_details[]= $order_details6;
             }else{
                 $order_details[]= $order_details7;
                 $order_details[]= $order_details8;
                 $order_details[]= $order_details3;
-                $order_details[]= $order_details4;
+//                $order_details[]= $order_details4;
                 $order_details[]= $order_details5;
                 $order_details[]= $order_details6;
             }

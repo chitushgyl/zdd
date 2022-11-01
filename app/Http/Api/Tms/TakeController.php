@@ -259,13 +259,13 @@ class TakeController extends Controller{
                     $order_details[] = $order_details2;
                 }
                 $order_details[] = $order_details3;
-                $order_details[]= $order_details4;
+//                $order_details[]= $order_details4;
                 $order_details[]= $order_details5;
                 $order_details[]= $order_details6;
             }else{
 
                 $order_details[]= $order_details3;
-                $order_details[]= $order_details4;
+//                $order_details[]= $order_details4;
                 $order_details[]= $order_details5;
                 $order_details[]= $order_details6;
             }
