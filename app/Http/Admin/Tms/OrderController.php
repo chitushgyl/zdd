@@ -654,11 +654,7 @@ class OrderController extends CommonController{
              ],
         ];
         **/
-        if (empty($company_id)){
-            $msg['code'] = 311;
-            $msg['msg'] = '请选择客户公司';
-            return $msg;
-        }
+
 
         $rules=[
             'order_type'=>'required',
@@ -681,13 +677,6 @@ class OrderController extends CommonController{
                 return $msg;
             }
 
-            if ($order_type == 'vehicle' || $order_type == 'lcl' || $order_type == 'lift') {
-                if (count($dispatcher) == 0) {
-                    $msg['code'] = 302;
-                    $msg['msg'] = '请填写订单信息！';
-                    return $msg;
-                }
-            }
             if ($order_type == 'line') {
                 if ($pick_flag =='N' && $send_flag =='N') {
                     if (empty($good_name_n)) {
@@ -727,33 +716,7 @@ class OrderController extends CommonController{
                 $send_t = '发货';
                 $pick_t = '收货';
             }
-            // $dispatcher[$k]['send_address_id']       =$send_address['self_id'];
-            //     $dispatcher[$k]['send_sheng']            =$send_address['sheng'];
-            //     $dispatcher[$k]['send_sheng_name']       =$send_address['sheng_name'];
-            //     $dispatcher[$k]['send_shi']              =$send_address['shi'];
-            //     $dispatcher[$k]['send_shi_name']         =$send_address['shi_name'];
-            //     $dispatcher[$k]['send_qu']               =$send_address['qu'];
-            //     $dispatcher[$k]['send_qu_name']          =$send_address['qu_name'];
-            //     $dispatcher[$k]['send_address']          =$send_address['address'];
-            //     $dispatcher[$k]['send_address_longitude']=$send_address['longitude'];
-            //     $dispatcher[$k]['send_address_latitude'] =$send_address['dimensionality'];
-            //     $dispatcher[$k]['send_contacts_id']      =$send_contacts['self_id'];
-            //     $dispatcher[$k]['send_contacts_name']    =$send_contacts['contacts'];
-            //     $dispatcher[$k]['send_contacts_tel']     =$send_contacts['tel'];
 
-            //     $dispatcher[$k]['gather_address_id']       =$gather_address['self_id'];
-            //     $dispatcher[$k]['gather_sheng']            =$gather_address['sheng'];
-            //     $dispatcher[$k]['gather_sheng_name']       =$gather_address['sheng_name'];
-            //     $dispatcher[$k]['gather_shi']              =$gather_address['shi'];
-            //     $dispatcher[$k]['gather_shi_name']         =$gather_address['shi_name'];
-            //     $dispatcher[$k]['gather_qu']               =$gather_address['qu'];
-            //     $dispatcher[$k]['gather_qu_name']          =$gather_address['qu_name'];
-            //     $dispatcher[$k]['gather_address']          =$gather_address['address'];
-            //     $dispatcher[$k]['gather_address_longitude']=$gather_address['longitude'];
-            //     $dispatcher[$k]['gather_address_latitude'] =$gather_address['dimensionality'];
-            //     $dispatcher[$k]['gather_contacts_id']      =$gather_contacts['self_id'];
-            //     $dispatcher[$k]['gather_contacts_name']    =$gather_contacts['contacts'];
-            //     $dispatcher[$k]['gather_contacts_tel']     =$gather_contacts['tel'];
             /** 处理一下发货地址  及联系人**/
             foreach ($dispatcher as $k => $v){
                 if ($order_type == 'vehicle' || $order_type == 'lcl' || ($order_type == 'line' && $send_flag == 'Y')) {
@@ -765,12 +728,7 @@ class OrderController extends CommonController{
                         $msg['msg'] = $pick_t.'地址不存在';
                         return $msg;
                     }
-//                    $gather_contacts = $tms->contacts($v['gather_contacts_id'],$v['gather_name'],$v['gather_tel'],$group_info,$user_info,$now_time);
-//                    if(empty($gather_contacts)){
-//                        $msg['code'] = 305;
-//                        $msg['msg'] = $pick_t.'联系人不存在';
-//                        return $msg;
-//                    }
+
                 } else if($order_type == 'line' && $send_flag == 'N') {
                     $gather_address = [
                         'self_id'           => '',
@@ -798,12 +756,7 @@ class OrderController extends CommonController{
                         $msg['msg'] = $send_t.'地址不存在';
                         return $msg;
                     }
-//                    $send_contacts = $tms->contacts($v['send_contacts_id'],$v['send_name'],$v['send_tel'],$group_info,$user_info,$now_time);
-//                    if(empty($send_contacts)){
-//                        $msg['code'] = 305;
-//                        $msg['msg'] = $send_t.'联系人不存在';
-//                        return $msg;
-//                    }
+
                 } else if($order_type == 'line' && $pick_flag == 'N') {
                     $send_address = [
                         'self_id'           => '',
@@ -852,10 +805,6 @@ class OrderController extends CommonController{
                     $msg['msg'] = '请选择温度！';
                     return $msg;
                 }
-                // dump($gather_address);
-                // dump($gather_contacts);
-                // dump($send_address);
-                // dd($send_contacts);
 
                 $dispatcher[$k]['send_address_id']       =$send_address->self_id;
                 $dispatcher[$k]['send_sheng']            =$send_address->sheng;

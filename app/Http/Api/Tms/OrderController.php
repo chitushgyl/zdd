@@ -568,13 +568,6 @@ class OrderController extends Controller{
                 $group_info    =SystemGroup::where($where_group)->select('group_code','group_name')->first();
             }
             /***开始做二次效验**/
-            if ($order_type == 'vehicle' || $order_type == 'lcl') {
-                if (count($dispatcher) == 0) {
-                    $msg['code'] = 302;
-                    $msg['msg'] = '请填写订单信息！';
-                    return $msg;
-                }
-            }
             if ($order_type == 'line') {
                 if ($pick_flag =='N' && $send_flag =='N') {
                     if (empty($good_name_n)) {
@@ -669,11 +662,6 @@ class OrderController extends Controller{
                         'tel'      => ''
                     ];
                     $send_address = (Object)$send_address;
-                }
-                if (empty($v['good_name'])) {
-                    $msg['code'] = 306;
-                    $msg['msg']  = '货物名称不能为空！';
-                    return $msg;
                 }
 
 
