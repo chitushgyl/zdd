@@ -179,6 +179,7 @@ class PlatformController extends CommonController{
 
         foreach ($data['items'] as $k=>$v) {
                 $v->picture = img_for($v->picture,'more');
+                $v->button_info = $button_info;
         }
 
 
