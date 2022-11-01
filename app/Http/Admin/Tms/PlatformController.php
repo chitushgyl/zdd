@@ -783,11 +783,6 @@ class PlatformController extends CommonController{
         $data['page_info']      =config('page.listrows');
         $data['button_info']    =$request->get('anniu');
 
-        $abc='车辆品牌';
-        $data['import_info']    =[
-
-        ];
-
         $msg['code']=200;
         $msg['msg']="数据拉取成功";
         $msg['data']=$data;
@@ -848,6 +843,7 @@ class PlatformController extends CommonController{
 
         foreach ($data['items'] as $k=>$v) {
             $v->picture = img_for($v->picture,'more');
+            $v->button_info = $button_info;
         }
 
 
