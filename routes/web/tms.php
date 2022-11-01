@@ -386,6 +386,7 @@ Route::group([
     Route::any('/platform/loanPass','PlatformController@loanPass');//贷款申请审核
     Route::any('/platform/carView','PlatformController@carView');//车辆详情
     Route::any('/platform/carUseFlag','PlatformController@carUseFlag');//启用禁用车辆
+    Route::any('/platform/useChargeAddress','PlatformController@useChargeAddress');//启用禁用充电桩
 });
 
 

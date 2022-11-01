@@ -888,6 +888,35 @@ class PlatformController extends CommonController{
     }
 
     /**
+     * /tms/platform/useChargeAddress
+     * */
+    public function useChargeAddress(Request $request,Status $status){
+        $now_time=date('Y-m-d H:i:s',time());
+        $operationing = $request->get('operationing');//接收中间件产生的参数
+        $table_name='charge_address';
+        $medol_name='ChargeAddress';
+        $self_id=$request->input('self_id');
+        $flag='useFlag';
+//        $self_id='car_202012242220439016797353';
+
+        $status_info=$status->changeFlag($table_name,$medol_name,$self_id,$flag,$now_time);
+
+        $operationing->access_cause='启用/禁用';
+        $operationing->table=$table_name;
+        $operationing->table_id=$self_id;
+        $operationing->now_time=$now_time;
+        $operationing->old_info=$status_info['old_info'];
+        $operationing->new_info=$status_info['new_info'];
+        $operationing->operation_type=$flag;
+
+        $msg['code']=$status_info['code'];
+        $msg['msg']=$status_info['msg'];
+        $msg['data']=$status_info['new_info'];
+
+        return $msg;
+    }
+
+    /**
      * 分类列表
      * */
     public function typePage(Request $request){
