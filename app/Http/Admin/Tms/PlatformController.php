@@ -725,7 +725,7 @@ class PlatformController extends CommonController{
                 $data['lnt']        =$lnt;
                 $data['name']       =$name;
                 $data['open_time']  =$open_time;
-                $data['picture']    =img_for($picture,'more');
+                $data['picture']    =img_for($picture,'in');
                 $data['view']       =$view;
                 $id=ChargeAddress::where($wheres)->update($data);
 
