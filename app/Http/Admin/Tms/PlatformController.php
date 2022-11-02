@@ -1179,9 +1179,11 @@ class PlatformController extends CommonController{
         $button_info8 = [];
         foreach ($button_info as $k => $v){
             if($v->id == 788){
-                $button_info1[]=$v;
+                $button_info1[] = $v;
                 $button_info2[] = $v;
                 $button_info3[] = $v;
+                $button_info4[] = $v;
+
             }
             if($v->id == 789){
                 $button_info2[] = $v;
@@ -1190,8 +1192,8 @@ class PlatformController extends CommonController{
                 $button_info2[] = $v;
             }
             if($v->id == 811){
-                $button_info2[] = $v;
                 $button_info3[] = $v;
+                $button_info4[] = $v;
             }
             if($v->id == 792){
 
@@ -1209,12 +1211,12 @@ class PlatformController extends CommonController{
             $v->id_back    = img_for($v->id_back,'no_json');
             $v->auth_serch = img_for($v->auth_serch,'no_json');
             $v->button_info=$button_info;
-            if ($v->first_trail == 'Y'){
+            if ($v->first_trail == 'Y' && $v->pass == 'W'){
                 $v->button_info=$button_info2;
             }elseif($v->first_trail == 'Y' && $v->pass == 'Y'){
+                $v->button_info=$button_info4;
+            }elseif($v->first_trail == 'Y' && $v->pass == 'N'){
                 $v->button_info=$button_info1;
-            } else{
-                $v->button_info=$button_info3;
             }
         }
 
