@@ -1188,8 +1188,8 @@ class PlatformController extends CommonController{
             if($v->id == 790){
                 $button_info2[] = $v;
             }
-            if($v->id == 791){
-
+            if($v->id == 811){
+                $button_info2[] = $v;
             }
             if($v->id == 792){
 
