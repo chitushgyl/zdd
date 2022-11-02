@@ -417,5 +417,66 @@ class HomeController extends Controller {
         return $msg;
     }
 
+    /**
+     * 身份证验证
+     * */
+    public function testId(Request $request){
+        $user_info     = $request->get('user_info');//接收中间件产生的参数
+        $project_type  = $request->get('project_type');
+        $total_user_id = $user_info->total_user_id;
+
+        /**接收数据*/
+        $body      = $request->input('bodys');
+
+        $host = "https://zid.market.alicloudapi.com";
+        $path = "/thirdnode/ImageAI/idcardfrontrecongnition";
+        $method = "POST";
+        $appcode = "c107e03b181e422c87a6e3a4f92db756";
+        $headers = array();
+        array_push($headers, "Authorization:APPCODE " . $appcode);
+        //根据API的要求，定义相对应的Content-Type
+        array_push($headers, "Content-Type".":"."application/x-www-form-urlencoded; charset=UTF-8");
+        $querys = "";
+        $bodys = "base64Str=".$body;
+        $url = $host . $path;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        if (1 == strpos("$".$host, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $bodys);
+        $result = curl_exec($curl);
+
+        $result = json_decode($result,true);
+
+        if ($result['error_code'] != 0){
+            $msg['code'] = 300;
+            $msg['msg']  = "验证失败，请重新拍照上传！";
+            return $msg;
+        }
+        if($result['error_code'] == 0 && $result['result']['direction'] == 0){
+            $msg['code'] = 200;
+            $msg['msg']  = "验证成功";
+            $data['name'] = $result['result']['name'];
+            $data['ID'] = $result['result']['idcardno'];
+            $msg['data'] = $data;
+            return $msg;
+        }else{
+            $msg['code'] = 300;
+            $msg['msg']  = "验证失败，请重新拍照上传！";
+            return $msg;
+        }
+
+
+    }
+
 
 }

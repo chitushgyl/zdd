@@ -302,6 +302,7 @@ Route::group([
     ], function() {
         Route::any('/home/customer_service', 'HomeController@customer_service');//联系客服
         Route::any('/home/myLoan', 'HomeController@myLoan');//联系客服
+        Route::any('/home/testId', 'HomeController@testId');//联系客服
 
     });
 
