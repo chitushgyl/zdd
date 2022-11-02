@@ -1183,6 +1183,8 @@ class PlatformController extends CommonController{
                 $button_info2[] = $v;
                 $button_info3[] = $v;
                 $button_info4[] = $v;
+                $button_info5[] = $v;
+
 
             }
             if($v->id == 789){
@@ -1193,7 +1195,7 @@ class PlatformController extends CommonController{
             }
             if($v->id == 811){
                 $button_info3[] = $v;
-                $button_info4[] = $v;
+
             }
             if($v->id == 792){
 
@@ -1202,6 +1204,7 @@ class PlatformController extends CommonController{
                 $button_info1[] = $v;
                 $button_info2[] = $v;
                 $button_info3[] = $v;
+                $button_info4[] = $v;
             }
 
         }
