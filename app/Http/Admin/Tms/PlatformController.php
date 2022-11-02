@@ -363,7 +363,7 @@ class PlatformController extends CommonController{
         }
 
         foreach ($data['items'] as $k=>$v) {
-
+             $v->button_info = $button_info;
         }
 
 
