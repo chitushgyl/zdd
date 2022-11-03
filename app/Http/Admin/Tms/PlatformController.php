@@ -1220,7 +1220,7 @@ class PlatformController extends CommonController{
             $v->id_front   = img_for($v->id_front,'no_json');
             $v->id_back    = img_for($v->id_back,'no_json');
             $v->auth_serch = img_for($v->auth_serch,'no_json');
-            $v->hold_img   = img_for($v->auth_serch,'no_json');
+            $v->hold_img   = img_for($v->hold_img,'no_json');
             $v->auth_serch_company   = img_for($v->auth_serch_company,'no_json');
             $v->button_info=$button_info;
             if ($v->first_trail == 'Y' && $v->pass == 'W'){
