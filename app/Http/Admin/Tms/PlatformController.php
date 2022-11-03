@@ -1128,6 +1128,8 @@ class PlatformController extends CommonController{
         $place_num      =$request->input('place_num');
         $name           =$request->input('name');
         $pass           =$request->input('pass');
+        $start_time     =$request->input('start_time');
+        $end_time       =$request->input('end_time');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
@@ -1138,11 +1140,13 @@ class PlatformController extends CommonController{
             ['type'=>'=','name'=>'connact','value'=>$connact],
             ['type'=>'=','name'=>'name','value'=>$name],
             ['type'=>'=','name'=>'pass','value'=>$pass],
+            ['type'=>'>','name'=>'create_time','value'=>$start_time],
+            ['type'=>'<=','name'=>'create_time','value'=>$end_time],
         ];
 
         $where=get_list_where($search);
 
-        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail'];
+        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
@@ -1239,7 +1243,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id'];
+        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id','create_time','update_time'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
