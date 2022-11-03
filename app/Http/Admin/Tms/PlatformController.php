@@ -1481,7 +1481,7 @@ class PlatformController extends CommonController{
                     }else{
                         $list['channel_way']=$v->channel_way;
                     }
-                    $list['identity']=$v->identity;
+                    $list['identity']=' '.$v->identity;
                     $list['create_time']=$v->create_time;
                     if($v->first_trail == 'Y'){
                         $list['first_trail']='通过';
