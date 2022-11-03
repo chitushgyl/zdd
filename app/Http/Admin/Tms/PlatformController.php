@@ -1220,7 +1220,7 @@ class PlatformController extends CommonController{
             }elseif($v->first_trail == 'Y' && $v->pass == 'Y'){
                 $v->button_info=$button_info3;
             }elseif($v->first_trail == 'Y' && $v->pass == 'N'){
-                $v->button_info=$button_info1;
+                $v->button_info=$button_info3;
             }elseif($v->first_trail == 'N' && $v->pass == 'W'){
                 $v->button_info=$button_info4;
             }elseif($v->first_trail == 'W' && $v->pass == 'W'){
