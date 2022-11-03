@@ -1236,7 +1236,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id'];
+        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
@@ -1342,7 +1342,7 @@ class PlatformController extends CommonController{
                     }else{
                         $new_info['pass'] = 'N';
                     }
-                    $new_info['reason'] = $reason;
+                    $new_info['fail_reason'] = $reason;
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
                     break;
 
