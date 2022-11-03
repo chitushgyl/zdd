@@ -1209,6 +1209,7 @@ class PlatformController extends CommonController{
 
         }
 
+        dump($button_info1,$button_info2,$button_info3,$button_info4);
         foreach ($data['items'] as $k=>$v) {
             $v->id_front   = img_for($v->id_front,'no_json');
             $v->id_back    = img_for($v->id_back,'no_json');
@@ -1222,6 +1223,8 @@ class PlatformController extends CommonController{
                 $v->button_info=$button_info1;
             }elseif($v->first_trail == 'N' && $v->pass == 'W'){
                 $v->button_info=$button_info4;
+            }elseif($v->first_trail == 'W' && $v->pass == 'W'){
+                $v->button_info=$button_info1;
             }
         }
 
