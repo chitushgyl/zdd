@@ -6,6 +6,7 @@ namespace App\Http\Admin\tms;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DetailsController as Details;
 use App\Http\Controllers\FileController as File;
+use App\Models\Group\SystemGroup;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
@@ -1219,6 +1220,8 @@ class PlatformController extends CommonController{
             $v->id_front   = img_for($v->id_front,'no_json');
             $v->id_back    = img_for($v->id_back,'no_json');
             $v->auth_serch = img_for($v->auth_serch,'no_json');
+            $v->hold_img   = img_for($v->auth_serch,'no_json');
+            $v->auth_serch_company   = img_for($v->auth_serch_company,'no_json');
             $v->button_info=$button_info;
             if ($v->first_trail == 'Y' && $v->pass == 'W'){
                 $v->button_info=$button_info2;
@@ -1440,24 +1443,21 @@ class PlatformController extends CommonController{
             $where=get_list_where($search);
 
             $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
-            $info=TmsConnact::where($where)->whereIn(explode(',',$id_list))->orderBy('create_time', 'desc')->select($select)->get();
-            dd($info);
+            $info=TmsConnact::where($where)->whereIn('self_id',explode(',',$id_list))->orderBy('create_time', 'desc')->select($select)->get();
+//            dd($info->toArray());
             if($info){
                 //设置表头
                 $row = [[
                     "id"=>'ID',
-                    "company_name"=>'姓名',
-                    "external_sku_id"=>'商品编号',
-                    "good_name"=>'商品名称',
-                    "good_english_name"=>'商品英文名称',
-                    "wms_unit"=>'入库单位',
-                    "good_zhuanhua"=>'商品包装换算',
-                    "period"=>'商品有效期',
-                    "use_flag"=>'状态',
-                    "wms_length"=>'箱长（米）',
-                    "wms_wide"=>'箱长（米）',
-                    "wms_high"=>'箱长（米）',
-                    "wms_weight"=>'箱重（KG）',
+                    "type"=>'类型',
+                    "name"=>'贷款人',
+                    "connact"=>'手机号',
+                    "channel_way"=>'推荐渠道',
+                    "identity"=>'身份证号',
+                    "create_time"=>'提交时间',
+                    "first_trail"=>'预审状态',
+                    "pass"=>'征信审核状态',
+                    "fail_reason"=>'不通过原因',
                 ]];
 
                 /** 现在根据查询到的数据去做一个导出的数据**/
@@ -1466,30 +1466,38 @@ class PlatformController extends CommonController{
                     $list=[];
 
                     $list['id']=($k+1);
-                    $list['company_name']=$v->company_name;
-                    $list['good_english_name']=$v->good_english_name;
-                    $list['external_sku_id']=$v->external_sku_id;
-                    $list['good_name']=$v->good_name;
-                    $list['wms_unit']=$v->wms_unit;
-
-                    if($v->wms_scale && $v->wms_target_unit){
-                        $list['good_zhuanhua']='1'.$v->wms_target_unit.'='.$v->wms_scale.$v->wms_unit;
-
+                    if ($v->type == 'personal'){
+                        $list['type']='个人';
+                    }elseif($v->type == 'company'){
+                        $list['type']='企业';
                     }else{
-                        $list['good_zhuanhua']=null;
+                        $list['type']='个人';
                     }
-
-
-                    if($v->use_flag == 'Y'){
-                        $list['use_flag']='使用中';
+                    $list['name']=$v->name;
+                    $list['connact']=$v->connact;
+                    if($v->channel_way){
+                        $company_info = SystemGroup::where('place_num',$v->channel_way)->select('self_id','place_num','group_name')->first();
+                        $list['channel_way']=$company_info->group_name;
                     }else{
-                        $list['use_flag']='禁止使用';
+                        $list['channel_way']=$v->channel_way;
                     }
-
-                    $list['wms_length']=$v->wms_length;
-                    $list['wms_wide']=$v->wms_wide;
-                    $list['wms_high']=$v->wms_high;
-                    $list['wms_weight']=$v->wms_weight;
+                    $list['identity']=$v->identity;
+                    $list['create_time']=$v->create_time;
+                    if($v->first_trail == 'Y'){
+                        $list['first_trail']='通过';
+                    }else{
+                        $list['first_trail']='不通过';
+                    }
+                    if($v->pass == 'Y'){
+                        $list['pass']='通过';
+                    }else{
+                        $list['pass']='不通过';
+                    }
+                    if($v->first_trail == 'N' ||$v->pass == 'N'){
+                        $list['fail_reason']=$v->fail_reason;
+                    }else{
+                        $list['fail_reason']='';
+                    }
 
                     $data_execl[]=$list;
                 }
