@@ -264,11 +264,11 @@ class HomeController extends Controller {
             ];
         }
         $connact_count = TmsConnact::where($where)->count();
-        if ($connact_count >0){
-            $msg['code'] = 307;
-            $msg['msg'] = '您已申请，请勿重复提交！';
-            return $msg;
-        }
+//        if ($connact_count >0){
+//            $msg['code'] = 307;
+//            $msg['msg'] = '您已申请，请勿重复提交！';
+//            return $msg;
+//        }
 
 
         if($channel_way){
