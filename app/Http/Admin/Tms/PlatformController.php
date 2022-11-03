@@ -5,6 +5,7 @@ namespace App\Http\Admin\tms;
 
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DetailsController as Details;
+use App\Http\Controllers\FileController as File;
 use App\Models\Tms\AppCar;
 use App\Models\Tms\AppCarousel;
 use App\Models\Tms\CarBrand;
@@ -1146,7 +1147,7 @@ class PlatformController extends CommonController{
 
         $where=get_list_where($search);
 
-        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time'];
+        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
@@ -1409,6 +1410,109 @@ class PlatformController extends CommonController{
         }else{
             $msg['code'] = 300;
             $msg['msg']  = "没有查询到数据";
+            return $msg;
+        }
+    }
+
+    /**
+     * 贷款导出
+     * */
+    public function loanExcel(Request $request,File $file){
+        $user_info  = $request->get('user_info');//接收中间件产生的参数
+        $now_time   =date('Y-m-d H:i:s',time());
+        $input      =$request->all();
+        /** 接收数据*/
+        $id_list     =$request->input('id_list');
+        $rules=[
+            'id_list'=>'required',
+        ];
+        $message=[
+            'id_list.required'=>'请选择要导出的数据',
+        ];
+        $validator=Validator::make($input,$rules,$message);
+        if($validator->passes()){
+            /** 下面开始执行导出逻辑**/
+
+            //查询条件
+            $search=[
+                ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ];
+            $where=get_list_where($search);
+
+            $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
+            $info=TmsConnact::where($where)->whereIn(explode(',',$id_list))->orderBy('create_time', 'desc')->select($select)->get();
+            dd($info);
+            if($info){
+                //设置表头
+                $row = [[
+                    "id"=>'ID',
+                    "company_name"=>'姓名',
+                    "external_sku_id"=>'商品编号',
+                    "good_name"=>'商品名称',
+                    "good_english_name"=>'商品英文名称',
+                    "wms_unit"=>'入库单位',
+                    "good_zhuanhua"=>'商品包装换算',
+                    "period"=>'商品有效期',
+                    "use_flag"=>'状态',
+                    "wms_length"=>'箱长（米）',
+                    "wms_wide"=>'箱长（米）',
+                    "wms_high"=>'箱长（米）',
+                    "wms_weight"=>'箱重（KG）',
+                ]];
+
+                /** 现在根据查询到的数据去做一个导出的数据**/
+                $data_execl=[];
+                foreach ($info as $k=>$v){
+                    $list=[];
+
+                    $list['id']=($k+1);
+                    $list['company_name']=$v->company_name;
+                    $list['good_english_name']=$v->good_english_name;
+                    $list['external_sku_id']=$v->external_sku_id;
+                    $list['good_name']=$v->good_name;
+                    $list['wms_unit']=$v->wms_unit;
+
+                    if($v->wms_scale && $v->wms_target_unit){
+                        $list['good_zhuanhua']='1'.$v->wms_target_unit.'='.$v->wms_scale.$v->wms_unit;
+
+                    }else{
+                        $list['good_zhuanhua']=null;
+                    }
+
+
+                    if($v->use_flag == 'Y'){
+                        $list['use_flag']='使用中';
+                    }else{
+                        $list['use_flag']='禁止使用';
+                    }
+
+                    $list['wms_length']=$v->wms_length;
+                    $list['wms_wide']=$v->wms_wide;
+                    $list['wms_high']=$v->wms_high;
+                    $list['wms_weight']=$v->wms_weight;
+
+                    $data_execl[]=$list;
+                }
+                /** 调用EXECL导出公用方法，将数据抛出来***/
+                $browse_type=$request->path();
+                $msg=$file->export($data_execl,$row,$user_info->group_code,$user_info->group_name,$browse_type,$user_info,$where,$now_time);
+
+                //dd($msg);
+                return $msg;
+
+            }else{
+                $msg['code']=301;
+                $msg['msg']="没有数据可以导出";
+                return $msg;
+            }
+        }else{
+            $erro=$validator->errors()->all();
+            $msg['msg']=null;
+            foreach ($erro as $k=>$v) {
+                $kk=$k+1;
+                $msg['msg'].=$kk.'：'.$v.'</br>';
+            }
+            $msg['code']=300;
             return $msg;
         }
     }
