@@ -288,32 +288,29 @@ class HomeController extends Controller {
         $validator=Validator::make($input,$rules,$message);
 
         if($validator->passes()){
-
             $wheres['self_id'] = $self_id;
             $old_info=TmsConnact::where($wheres)->first();
-
+            $data['self_id']            = generate_id('connect_');		//优惠券表ID
+            $data['company_name']       = $company_name;
+            $data['connact']            = $connact;
+            $data['name']               = $name;
+            $data['type']      		    = $type;
+            $data['channel_way']      	= $channel_way;
+            $data['identity']      		= $identity;
+            $data['id_front']      		= img_for($id_front,'one_in');
+            $data['id_back']      		= img_for($id_back,'one_in');
+            $data['auth_serch']      	= img_for($auth_serch,'one_in');
+            $data['hold_img']      		= img_for($hold_img,'one_in');
+            $data['auth_serch_company'] = img_for($auth_serch_company,'one_in');
             if($old_info){
-
+                $data['update_time'] = $now_time;
+                $id = TmsConnact::where($wheres)->update($data);
             }else{
-                $data['self_id']            = generate_id('connect_');		//优惠券表ID
-                $data['company_name']       = $company_name;
-                $data['connact']            = $connact;
                 $data['group_code']         = $group_code;
                 $data['total_user_id']      = $user_info->total_user_id;
-                $data['name']               = $name;
-                $data['type']      		    = $type;
-                $data['channel_way']      	= $channel_way;
                 $data['create_time']        = $data['update_time']	= $now_time;
-                $data['identity']      		= $identity;
-                $data['id_front']      		= img_for($id_front,'one_in');
-                $data['id_back']      		= img_for($id_back,'one_in');
-                $data['auth_serch']      	= img_for($auth_serch,'one_in');
-                $data['hold_img']      		= img_for($hold_img,'one_in');
-                $data['auth_serch_company'] = img_for($auth_serch_company,'one_in');
                 $id=TmsConnact::insert($data);
-
             }
-
             if($id){
                 $msg['code'] = 200;
                 $msg['msg'] = "操作成功";

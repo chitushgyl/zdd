@@ -1485,11 +1485,15 @@ class PlatformController extends CommonController{
                     $list['create_time']=$v->create_time;
                     if($v->first_trail == 'Y'){
                         $list['first_trail']='通过';
+                    }elseif($v->first_trail == 'W'){
+                        $list['first_trail']='审核中';
                     }else{
                         $list['first_trail']='不通过';
                     }
                     if($v->pass == 'Y'){
                         $list['pass']='通过';
+                    }elseif ($v->pass == 'W'){
+                        $list['pass']='审核中';
                     }else{
                         $list['pass']='不通过';
                     }
