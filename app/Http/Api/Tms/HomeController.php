@@ -478,7 +478,7 @@ class HomeController extends Controller {
             return $msg;
         }
 
-        if($result['error_code'] == 0 && $result['result']['direction'] > 0){
+        if($result['error_code'] == 0 && $result['result']['direction'] >= 0){
             $msg['code'] = 200;
             $msg['msg']  = "验证成功";
             $data['name'] = $result['result']['name'];
