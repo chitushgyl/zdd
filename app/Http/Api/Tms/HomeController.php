@@ -69,6 +69,8 @@ class HomeController extends Controller {
           foreach ($data['info'] as $k=>$v) {
               $v->picture = img_for($v->picture,'more');
               $v->car_type_show = $v->tmsCarType->parame_name;
+              $v->car_type = $v->tmsCarType->parame_name;
+              $v->brand = $v->carBrand->brand;
           }
           $msg['code'] = 200;
           $msg['msg']  = "数据拉取成功";
