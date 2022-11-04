@@ -1164,7 +1164,7 @@ class PlatformController extends CommonController{
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('pass', 'desc')
                     ->select($select)->get();
-                $data['group_show']='N';
+                $data['group_show']='Y';
                 break;
 
             case 'more':
