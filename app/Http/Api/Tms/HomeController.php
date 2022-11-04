@@ -303,6 +303,7 @@ class HomeController extends Controller {
             $data['hold_img']      		= img_for($hold_img,'one_in');
             $data['auth_serch_company'] = img_for($auth_serch_company,'one_in');
             if($old_info){
+                $data['first_trail']      		= 'W';
                 $data['update_time'] = $now_time;
                 $id = TmsConnact::where($wheres)->update($data);
             }else{
