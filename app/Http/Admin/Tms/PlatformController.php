@@ -476,10 +476,18 @@ class PlatformController extends CommonController{
         $where=get_list_where($search);
 
         $select=['self_id','brand','type','car_type','price','view','car_name','picture','delete_flag','use_flag'];
+        $select1 = ['self_id','parame_name'];
+        $select2 =['self_id','brand'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=AppCar::where($where)->count(); //总的数据量
-                $data['items']=AppCar::where($where)
+                $data['items']=AppCar::with(['tmsCarType'=>function($query)use($select1){
+                    $query->select($select1);
+                }])
+                    ->with(['carBrand'=>function($query)use($select2){
+                        $query->select($select2);
+                    }])
+                    ->where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
                     ->select($select)->get();
                 $data['group_show']='Y';
@@ -488,7 +496,13 @@ class PlatformController extends CommonController{
             case 'one':
                 $where[]=['group_code','=',$group_info['group_code']];
                 $data['total']=AppCar::where($where)->count(); //总的数据量
-                $data['items']=AppCar::where($where)
+                $data['items']=AppCar::with(['tmsCarType'=>function($query)use($select1){
+                    $query->select($select1);
+                }])
+                    ->with(['carBrand'=>function($query)use($select2){
+                        $query->select($select2);
+                    }])
+                    ->where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
                     ->select($select)->get();
                 $data['group_show']='N';
@@ -496,7 +510,13 @@ class PlatformController extends CommonController{
 
             case 'more':
                 $data['total']=AppCar::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
-                $data['items']=AppCar::where($where)->whereIn('group_code',$group_info['group_code'])
+                $data['items']=AppCar::with(['tmsCarType'=>function($query)use($select1){
+                    $query->select($select1);
+                }])
+                    ->with(['carBrand'=>function($query)use($select2){
+                        $query->select($select2);
+                    }])
+                    ->where($where)->whereIn('group_code',$group_info['group_code'])
                     ->offset($firstrow)->limit($listrows)->orderBy('create_time', 'desc')
                     ->select($select)->get();
                 $data['group_show']='Y';
@@ -505,6 +525,8 @@ class PlatformController extends CommonController{
 
         foreach ($data['items'] as $k=>$v) {
                 $v->button_info = $button_info;
+                $v->car_type = $v->tmsCarType->parame_name;
+                $v->brand = $v->carBrand->brand;
         }
 
 
