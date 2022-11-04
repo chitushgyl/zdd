@@ -1121,7 +1121,7 @@ class PlatformController extends CommonController{
         /** 接收中间件参数**/
         $group_info     = $request->get('group_info');//接收中间件产生的参数
         $button_info    = $request->get('anniu');//接收中间件产生的参数
-
+        dd($group_info);
         /**接收数据*/
         $num            =$request->input('num')??10;
         $page           =$request->input('page')??1;
@@ -1159,12 +1159,12 @@ class PlatformController extends CommonController{
                 break;
 
             case 'one':
-                $where[]=['group_code','=',$group_info['group_code']];
+//                $where[]=['group_code','=',$group_info['group_code']];
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('pass', 'desc')
                     ->select($select)->get();
-                $data['group_show']='Y';
+                $data['group_show']='N';
                 break;
 
             case 'more':
