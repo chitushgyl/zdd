@@ -47,7 +47,7 @@ class HomeController extends Controller {
           $search = [
               ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
               ['type'=>'=','name'=>'car_type','value'=>$car_type],
-              ['type'=>'=','name'=>'brand_type','value'=>$brand_type],
+              ['type'=>'=','name'=>'brand','value'=>$brand_type],
           ];
 
           $where = get_list_where($search);
