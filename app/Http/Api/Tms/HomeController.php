@@ -53,9 +53,13 @@ class HomeController extends Controller {
           $where = get_list_where($search);
           $select = ['self_id','type','brand','car_type','create_time','update_time','price','view','car_name','picture','param'];
           $select1 = ['self_id','parame_name'];
+          $select2 =['self_id','brand'];
           $data['info'] = AppCar::with(['tmsCarType'=>function($query)use($select1){
               $query->select($select1);
-          }])->where($where)
+          }])
+              ->with(['carBrand'=>function($query)use($select2){
+                  $query->select($select2);
+              }])->where($where)
               ->offset($firstrow)
               ->limit($listrows)
               ->orderBy('create_time', 'desc')
