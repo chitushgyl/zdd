@@ -425,6 +425,35 @@ class PlatformController extends CommonController{
     }
 
     /**
+     * 添加/编辑车辆
+     * */
+    public function createCar(Request $request){
+        /** 接收数据*/
+        $self_id=$request->input('self_id');
+        $where=[
+            ['delete_flag','=','Y'],
+            ['self_id','=',$self_id],
+        ];
+        $select=['self_id','brand','type','car_type','price','view','car_name','picture','delete_flag','use_flag'];
+        $select1 = ['self_id','parame_name'];
+        $data['info']=AppCar::with(['tmsCarType'=>function($query)use($select1){
+            $query->select($select1);
+        }])->where($where)->select($select)->first();
+
+        if ($data['info']){
+            $data['info']->license = img_for($data['info']->picture,'more');
+            $data['info']->car_type  = $data['info']->tmsCarType->parame_name;
+        }
+
+        $msg['code']=200;
+        $msg['msg']="数据拉取成功";
+        $msg['data']=$data;
+//        dd($msg);
+        return $msg;
+    }
+
+
+    /**
      *车辆列表
      * */
     public function carPage(Request $request){

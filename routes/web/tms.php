@@ -388,6 +388,7 @@ Route::group([
     Route::any('/platform/carUseFlag','PlatformController@carUseFlag');//启用禁用车辆
     Route::any('/platform/useChargeAddress','PlatformController@useChargeAddress');//启用禁用充电桩
     Route::any('/platform/loanExcel','PlatformController@loanExcel');//导出贷款信息
+    Route::any('/platform/createCar','PlatformController@createCar');//导出贷款信息
 });
 
 
