@@ -434,7 +434,7 @@ class PlatformController extends CommonController{
             ['delete_flag','=','Y'],
             ['self_id','=',$self_id],
         ];
-        $select=['self_id','brand','type','car_type','price','view','car_name','picture','delete_flag','use_flag'];
+        $select=['self_id','brand','type','car_type','price','view','car_name','picture','delete_flag','use_flag','param'];
         $select1 = ['self_id','parame_name'];
         $data['info']=AppCar::with(['tmsCarType'=>function($query)use($select1){
             $query->select($select1);
