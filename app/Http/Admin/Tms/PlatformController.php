@@ -1460,11 +1460,23 @@ class PlatformController extends CommonController{
         $table_name = 'app_car';
         $select = ['self_id','type','brand','car_type','create_time','update_time','price','view','car_name','picture','param'];
         // $self_id = 'car_202101111749191839630920';
-        $info = $details->details($self_id,$table_name,$select);
+        $select1 = ['self_id','parame_name'];
+        $select2 =['self_id','brand'];
+        $info = AppCar::with(['tmsCarType'=>function($query)use($select1){
+            $query->select($select1);
+        }])
+            ->with(['carBrand'=>function($query)use($select2){
+                $query->select($select2);
+            }])->where('self_id',$self_id)
+            ->select($select)
+            ->first();
 
         if($info) {
             /** 如果需要对数据进行处理，请自行在下面对 $$info 进行处理工作*/
             $info->picture = img_for($info->picture,'more');
+            $info->car_type_show = $info->tmsCarType->parame_name;
+            $info->car_type = $info->tmsCarType->parame_name;
+            $info->brand = $info->carBrand->brand;
             $data['info'] = $info;
             $msg['code']  = 200;
             $msg['msg']   = "数据拉取成功";
