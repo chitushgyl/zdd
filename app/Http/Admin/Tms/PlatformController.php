@@ -465,12 +465,18 @@ class PlatformController extends CommonController{
         $num            =$request->input('num')??10;
         $page           =$request->input('page')??1;
         $use_flag       =$request->input('use_flag');
+        $car_name       =$request->input('car_name');
+        $brand       =$request->input('brand');
+        $car_type       =$request->input('car_type');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
             ['type'=>'all','name'=>'use_flag','value'=>$use_flag],
+            ['type'=>'like','name'=>'car_name','value'=>$car_name],
+            ['type'=>'=','name'=>'brand','value'=>$brand],
+            ['type'=>'=','name'=>'car_type','value'=>$car_type],
         ];
 
         $where=get_list_where($search);
