@@ -1191,9 +1191,9 @@ class PlatformController extends CommonController{
         $end_time       =$request->input('end_time');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
-        if ($place_num){
-            $first_trail    ='';
-        }
+//        if ($place_num){
+//            $first_trail    ='';
+//        }
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
             ['type'=>'=','name'=>'channel_way','value'=>$place_num],
