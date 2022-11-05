@@ -1213,6 +1213,7 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('pass', 'desc')
+                    ->orderBy('create_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='Y';
                 break;
@@ -1222,6 +1223,7 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)->orderBy('pass', 'desc')
+                    ->orderBy('create_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='N';
                 break;
@@ -1230,6 +1232,7 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
                     ->offset($firstrow)->limit($listrows)->orderBy('pass', 'desc')
+                    ->orderBy('create_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='Y';
                 break;
@@ -1517,7 +1520,7 @@ class PlatformController extends CommonController{
             ];
             $where=get_list_where($search);
 
-            $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
+            $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','fail_reason','create_time'];
             $info=TmsConnact::where($where)->whereIn('self_id',explode(',',$id_list))->orderBy('create_time', 'desc')->select($select)->get();
 //            dd($info->toArray());
             if($info){

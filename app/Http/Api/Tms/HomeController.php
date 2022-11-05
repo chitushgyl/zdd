@@ -278,15 +278,19 @@ class HomeController extends Controller {
         }else{
             $where=[
                 ['group_code','=',$user_info->group_code],
-                ['delete_flag','=','Y']
+                ['delete_flag','=','Y'],
             ];
         }
         $connact_count = TmsConnact::where($where)->count();
-//        if ($connact_count >0){
+        if ($connact_count >0){
+//            $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->last();
+//            if ($connact_info){
+//
+//            }
 //            $msg['code'] = 307;
 //            $msg['msg'] = '您已申请，请勿重复提交！';
 //            return $msg;
-//        }
+        }
 
 
         if($channel_way){
