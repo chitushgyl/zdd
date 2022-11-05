@@ -1192,7 +1192,7 @@ class PlatformController extends CommonController{
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
         if ($place_num){
-            
+            $first_trail = null;
         }
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
@@ -1207,7 +1207,6 @@ class PlatformController extends CommonController{
         ];
 
         $where=get_list_where($search);
-
         $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company'];
         switch ($group_info['group_id']){
             case 'all':
