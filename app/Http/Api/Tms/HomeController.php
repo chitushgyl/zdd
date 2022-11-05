@@ -283,14 +283,12 @@ class HomeController extends Controller {
         }
         $connact_count = TmsConnact::where($where)->count();
         if ($connact_count >0){
-//            $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->last();
-//            dd($connact_info);
-//            if ($connact_info){
-//
-//            }
-//            $msg['code'] = 307;
-//            $msg['msg'] = '您已申请，请勿重复提交！';
-//            return $msg;
+            $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->orderBy('create_time','desc')->first();
+            if ($connact_info->pass == 'W' && $connact_info->first_trail != 'N' ){
+                $msg['code'] = 307;
+                $msg['msg'] = '您的贷款申请正在审核中，请勿重复提交！';
+                return $msg;
+            }
         }
 
 
