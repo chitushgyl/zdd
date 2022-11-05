@@ -1192,7 +1192,7 @@ class PlatformController extends CommonController{
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
         if ($place_num){
-            unset($first_trail);
+            
         }
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
