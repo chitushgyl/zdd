@@ -284,6 +284,7 @@ class HomeController extends Controller {
         $connact_count = TmsConnact::where($where)->count();
         if ($connact_count >0){
 //            $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->last();
+//            dd($connact_info);
 //            if ($connact_info){
 //
 //            }
