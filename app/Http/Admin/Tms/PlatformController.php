@@ -1185,12 +1185,15 @@ class PlatformController extends CommonController{
         $type           =$request->input('type');
         $place_num      =$request->input('place_num');
         $name           =$request->input('name');
+        $first_trail    =$request->input('first_trail');
         $pass           =$request->input('pass');
         $start_time     =$request->input('start_time');
         $end_time       =$request->input('end_time');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
-
+        if ($place_num){
+            $first_trail    ='';
+        }
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
             ['type'=>'=','name'=>'channel_way','value'=>$place_num],
@@ -1198,6 +1201,7 @@ class PlatformController extends CommonController{
             ['type'=>'=','name'=>'connact','value'=>$connact],
             ['type'=>'=','name'=>'name','value'=>$name],
             ['type'=>'=','name'=>'pass','value'=>$pass],
+            ['type'=>'=','name'=>'first_trail','value'=>$first_trail],
             ['type'=>'>','name'=>'create_time','value'=>$start_time],
             ['type'=>'<=','name'=>'create_time','value'=>$end_time],
         ];
