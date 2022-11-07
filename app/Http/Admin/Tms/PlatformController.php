@@ -1214,7 +1214,7 @@ class PlatformController extends CommonController{
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
-                    ->orderBy('create_time','DESC')
+                    ->orderBy('update_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='Y';
                 break;
@@ -1225,7 +1225,7 @@ class PlatformController extends CommonController{
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
-                    ->orderBy('create_time','DESC')
+                    ->orderBy('update_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='N';
                 break;
@@ -1235,7 +1235,7 @@ class PlatformController extends CommonController{
                 $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
-                    ->orderBy('create_time','DESC')
+                    ->orderBy('update_time','DESC')
                     ->select($select)->get();
                 $data['group_show']='Y';
                 break;
@@ -1288,17 +1288,17 @@ class PlatformController extends CommonController{
             $v->hold_img   = img_for($v->hold_img,'no_json');
             $v->auth_serch_company   = img_for($v->auth_serch_company,'no_json');
             $v->button_info=$button_info;
-            if ($v->first_trail == 'Y' && $v->pass == 'W'){
+            if ($v->first_trail == 3 && $v->pass == 1){
                 $v->button_info=$button_info2;
-            }elseif($v->first_trail == 'Y' && $v->pass == 'Y'){
+            }elseif($v->first_trail == 3 && $v->pass == 3){
                 $v->button_info=$button_info3;
-            }elseif($v->first_trail == 'Y' && $v->pass == 'N'){
+            }elseif($v->first_trail == 3 && $v->pass == 2){
                 $v->button_info=$button_info3;
-            }elseif($v->first_trail == 'N' && $v->pass == 'W'){
+            }elseif($v->first_trail == 2 && $v->pass == 1){
                 $v->button_info=$button_info4;
-            }elseif($v->first_trail == 'W' && $v->pass == 'W'){
+            }elseif($v->first_trail == 1 && $v->pass == 1){
                 $v->button_info=$button_info1;
-            }elseif($v->first_trail == 'N' && $v->pass == 'N'){
+            }elseif($v->first_trail == 2 && $v->pass == 2){
                 $v->button_info=$button_info3;
             }else{
                 $v->button_info=$button_info5;
@@ -1408,9 +1408,9 @@ class PlatformController extends CommonController{
                 case 'pass':
                     $new_info['update_time'] = $now_time;
                     if ($trail_type == 'Y'){
-                        $new_info['first_trail'] = 'Y';
+                        $new_info['first_trail'] = 3;
                     }else{
-                        $new_info['pass'] = 'Y';
+                        $new_info['pass'] = 3;
                     }
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
 
@@ -1418,9 +1418,9 @@ class PlatformController extends CommonController{
                 case 'fail':
                     $new_info['update_time'] = $now_time;
                     if ($trail_type == 'Y'){
-                        $new_info['first_trail'] = 'N';
+                        $new_info['first_trail'] = 2;
                     }else{
-                        $new_info['pass'] = 'N';
+                        $new_info['pass'] = 2;
                     }
                     $new_info['fail_reason'] = $reason;
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
@@ -1564,21 +1564,21 @@ class PlatformController extends CommonController{
                     }
                     $list['identity']=' '.$v->identity;
                     $list['create_time']=$v->create_time;
-                    if($v->first_trail == 'Y'){
+                    if($v->first_trail == 3){
                         $list['first_trail']='通过';
-                    }elseif($v->first_trail == 'W'){
+                    }elseif($v->first_trail == 1){
                         $list['first_trail']='审核中';
                     }else{
                         $list['first_trail']='不通过';
                     }
-                    if($v->pass == 'Y'){
+                    if($v->pass == 3){
                         $list['pass']='通过';
-                    }elseif ($v->pass == 'W'){
+                    }elseif ($v->pass == 1){
                         $list['pass']='审核中';
                     }else{
                         $list['pass']='不通过';
                     }
-                    if($v->first_trail == 'N' ||$v->pass == 'N'){
+                    if($v->first_trail == 2 ||$v->pass == 2){
                         $list['fail_reason']=$v->fail_reason;
                     }else{
                         $list['fail_reason']='';
