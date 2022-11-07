@@ -1213,7 +1213,6 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
-                    ->orderBy('first_trail', 'asc')
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
@@ -1225,7 +1224,6 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
-                    ->orderBy('first_trail', 'asc')
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
@@ -1236,7 +1234,6 @@ class PlatformController extends CommonController{
                 $data['total']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
                     ->offset($firstrow)->limit($listrows)
-                    ->orderBy('first_trail', 'asc')
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
