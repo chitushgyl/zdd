@@ -369,14 +369,16 @@ class HomeController extends Controller {
         //接收数据
         $address     = $request->input('address');
         $name     = $request->input('name');
+        $type     = $request->input('type');
 
         $search = [
             ['type'=>'like','name'=>'address','value'=>$address],
             ['type'=>'like','name'=>'name','value'=>$name],
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'=','name'=>'type','value'=>$type],
         ];
         $where=get_list_where($search);
-        $select = ['self_id','name','address','open_time','view','picture','lat','lnt','create_time'];
+        $select = ['self_id','name','address','open_time','view','picture','lat','lnt','create_time','type'];
         $info = ChargeAddress::where($where)->select($select)->get();
 
         if($info){

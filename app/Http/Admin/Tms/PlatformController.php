@@ -759,6 +759,7 @@ class PlatformController extends CommonController{
         $picture            =$request->input('picture');
         $lat                =$request->input('lat');
         $lnt                =$request->input('lnt');
+        $type                =$request->input('type');
 
 
         /*** 虚拟数据
@@ -786,6 +787,7 @@ class PlatformController extends CommonController{
                 $data['open_time']  =$open_time;
                 $data['picture']    =img_for($picture,'in');
                 $data['view']       =$view;
+                $data['type']       =$type;
                 $id=ChargeAddress::where($wheres)->update($data);
 
                 $operationing->access_cause='修改充电桩地址';
@@ -800,6 +802,7 @@ class PlatformController extends CommonController{
                 $data['picture']            =img_for($picture,'in');
                 $data['lat']                =$lat;
                 $data['lnt']                =$lnt;
+                $data['type']               =$type;
                 $data['create_time']        =$data['update_time']=$now_time;
 
                 $id=ChargeAddress::insert($data);
@@ -861,6 +864,7 @@ class PlatformController extends CommonController{
         $page           =$request->input('page')??1;
         $name           =$request->input('name');
         $address        =$request->input('address');
+        $type        =$request->input('type');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
 
@@ -868,11 +872,12 @@ class PlatformController extends CommonController{
             ['type'=>'like','name'=>'name','value'=>$name],
             ['type'=>'like','name'=>'address','value'=>$address],
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
+            ['type'=>'=','name'=>'type','value'=>$type],
         ];
 
         $where=get_list_where($search);
 
-        $select=['self_id','name','address','open_time','view','picture','lat','lnt','create_time','use_flag','delete_flag'];
+        $select=['self_id','name','address','open_time','view','picture','lat','lnt','create_time','use_flag','delete_flag','type'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=ChargeAddress::where($where)->count(); //总的数据量
