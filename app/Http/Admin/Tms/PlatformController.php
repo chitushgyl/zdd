@@ -1191,6 +1191,9 @@ class PlatformController extends CommonController{
         $end_time       =$request->input('end_time');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
+        if ($group_info['group_id'] == 'more'){
+            $place_num   = null;
+        }
         if ($place_num){
             $first_trail = null;
         }
