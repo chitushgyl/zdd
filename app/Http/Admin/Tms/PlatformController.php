@@ -1231,8 +1231,9 @@ class PlatformController extends CommonController{
                 break;
 
             case 'more':
-                $data['total']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
-                $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
+                $channel_way = SystemGroup::whereIn('group_code',$group_info['group_code'])->pluck('place_num')->toArray();
+                $data['total']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)->count(); //总的数据量
+                $data['items']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
