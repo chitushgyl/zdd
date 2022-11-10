@@ -1191,6 +1191,11 @@ class PlatformController extends CommonController{
         $end_time       =$request->input('end_time');
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
+
+        /**
+         * 虚拟数据
+         * */
+        $place_num = SystemGroup::whereIn('group_code',$group_info['group_code'])->pluck('place_num')->toArray();
         if ($place_num){
             $first_trail = null;
         }
@@ -1211,7 +1216,7 @@ class PlatformController extends CommonController{
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
-                $data['items']=TmsConnact::where($where)
+                $data['items']=TmsConnact::where($where)->whereIn('channel_way',$place_num)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
@@ -1222,7 +1227,7 @@ class PlatformController extends CommonController{
             case 'one':
 //                $where[]=['group_code','=',$group_info['group_code']];
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
-                $data['items']=TmsConnact::where($where)
+                $data['items']=TmsConnact::where($where)->whereIn('channel_way',$place_num)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
@@ -1231,8 +1236,8 @@ class PlatformController extends CommonController{
                 break;
 
             case 'more':
-                $data['total']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])->count(); //总的数据量
-                $data['items']=TmsConnact::where($where)->whereIn('group_code',$group_info['group_code'])
+                $data['total']=TmsConnact::where($where)->whereIn('channel_way',$place_num)->count(); //总的数据量
+                $data['items']=TmsConnact::where($where)->whereIn('channel_way',$place_num)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('pass', 'asc')
                     ->orderBy('update_time','DESC')
