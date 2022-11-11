@@ -1194,14 +1194,22 @@ class PlatformController extends CommonController{
         $pass           =$request->input('pass');
         $start_time     =$request->input('start_time');
         $end_time       =$request->input('end_time');
+        $app_type       =$request->input('app_type');
+        $app_type = 'app';
         $listrows       =$num;
         $firstrow       =($page-1)*$listrows;
         if ($group_info['group_id'] == 'more'){
             $place_num   = null;
         }
-        if ($place_num){
-            $first_trail = null;
+
+        if ($app_type == 'app'){
+
+        }else{
+            if ($place_num){
+                $first_trail = null;
+            }
         }
+
         $search=[
             ['type'=>'=','name'=>'delete_flag','value'=>'Y'],
             ['type'=>'=','name'=>'channel_way','value'=>$place_num],
@@ -1218,31 +1226,40 @@ class PlatformController extends CommonController{
         $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company','fail_reason'];
         switch ($group_info['group_id']){
             case 'all':
+                dump($where);
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
+                dump(1);
+                dd($data['items']->toArray());
                 $data['group_show']='Y';
                 break;
 
             case 'one':
 //                $where[]=['group_code','=',$group_info['group_code']];
+                dump($where);
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
+                dump(2);
+                dd($data['items']->toArray());
                 $data['group_show']='N';
                 break;
 
             case 'more':
+                dump($where);
                 $channel_way = SystemGroup::whereIn('group_code',$group_info['group_code'])->pluck('place_num')->toArray();
                 $data['total']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
+                dump(3);
+                dd($data['items']->toArray());
                 $data['group_show']='Y';
                 break;
         }

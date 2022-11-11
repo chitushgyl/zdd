@@ -61,7 +61,7 @@ class CompanyController extends CommonController{
 
         $where=get_list_where($search);
 
-        $select=['self_id','group_code','group_name','name','leader_phone','tel','address','place_num',
+        $select=['self_id','group_code','group_name','name','leader_phone','tel','address','place_num','audit',
             'business_type','use_flag','create_user_name','create_time',
             'domain_name','front_name','company_image_url','expire_time','father_group_code','group_qr_code','user_number','company_type'];
 
@@ -143,7 +143,7 @@ class CompanyController extends CommonController{
             ['self_id','=',$self_id],
         ];
 
-        $select=['self_id','business_type','place_num','group_name','company_image_url','name','leader_phone','tel','address','longitude','dimensionality','floating_flag','user_number','company_type'];
+        $select=['self_id','business_type','place_num','audit','group_name','company_image_url','name','leader_phone','tel','address','longitude','dimensionality','floating_flag','user_number','company_type'];
         $data['info']=SystemGroup::where($where)->select($select)->first();
 
 
@@ -203,6 +203,7 @@ class CompanyController extends CommonController{
         $user_number            ='9999';
         $company_type            =$request->input('company_type');
         $place_num            =$request->input('place_num');
+        $audit            =$request->input('audit');
         // $input['group_name']    =$group_name='4878787878';
 
 
@@ -272,6 +273,7 @@ class CompanyController extends CommonController{
             $data['address']            =$address;
             $data['company_type']       =$company_type;
             $data['place_num']          =$place_num;
+            $data['audit']              =$audit;
 
             $data['company_image_url']=img_for($company_image_url,'in');
 
