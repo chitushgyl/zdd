@@ -1226,40 +1226,31 @@ class PlatformController extends CommonController{
         $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company','fail_reason'];
         switch ($group_info['group_id']){
             case 'all':
-                dump($where);
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
-                dump(1);
-                dd($data['items']->toArray());
                 $data['group_show']='Y';
                 break;
 
             case 'one':
 //                $where[]=['group_code','=',$group_info['group_code']];
-                dump($where);
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
-                dump(2);
-                dd($data['items']->toArray());
                 $data['group_show']='N';
                 break;
 
             case 'more':
-                dump($where);
                 $channel_way = SystemGroup::whereIn('group_code',$group_info['group_code'])->pluck('place_num')->toArray();
                 $data['total']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)->count(); //总的数据量
                 $data['items']=TmsConnact::where($where)->whereIn('channel_way',$channel_way)
                     ->offset($firstrow)->limit($listrows)
                     ->orderBy('update_time','DESC')
                     ->select($select)->get();
-                dump(3);
-                dd($data['items']->toArray());
                 $data['group_show']='Y';
                 break;
         }
