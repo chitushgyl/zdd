@@ -512,16 +512,18 @@ class HomeController extends Controller {
         $user_info     = $request->get('user_info');//接收中间件产生的参数
         $project_type  = $request->get('project_type');
         //接收数据
-
+        $type      = $request->input('type');
         if($user_info->total_user_id){
             $where=[
                 ['total_user_id','=',$user_info->total_user_id],
                 ['delete_flag','=','Y'],
+                ['type','=',$type],
             ];
         }else{
             $where=[
                 ['group_code','=',$user_info->group_code],
                 ['delete_flag','=','Y'],
+                ['type','=',$type],
             ];
         }
 
