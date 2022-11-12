@@ -512,9 +512,6 @@ class HomeController extends Controller {
         $user_info     = $request->get('user_info');//接收中间件产生的参数
         $project_type  = $request->get('project_type');
         //接收数据
-        $address     = $request->input('address');
-        $name     = $request->input('name');
-        $type     = $request->input('type');
 
         if($user_info->total_user_id){
             $where=[
