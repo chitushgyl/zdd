@@ -285,7 +285,7 @@ class HomeController extends Controller {
         $connact_count = TmsConnact::where($where)->count();
         if ($connact_count >0){
             $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->orderBy('create_time','desc')->first();
-            if ($connact_info->pass == 1 && $connact_info->first_trail != 2 ){
+            if ($connact_info->pass == 1){
                 $msg['code'] = 307;
                 $msg['msg'] = '您的贷款申请正在审核中，请勿重复提交！';
                 return $msg;
@@ -326,6 +326,7 @@ class HomeController extends Controller {
             $data['auth_serch_company'] = img_for($auth_serch_company,'one_in');
             if($old_info){
                 $data['first_trail']      		= 1;
+                $data['fail_reason']      		= '';
                 $data['update_time'] = $now_time;
                 $id = TmsConnact::where($wheres)->update($data);
             }else{

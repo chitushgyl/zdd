@@ -1400,7 +1400,7 @@ class PlatformController extends CommonController{
         $input              =$request->all();
         $self_id=$request->input('self_id'); //数据ID
         $type = $request->input('type');//操作类别:pass 通过  fail失败
-        $trail_type = $request->input('trail_type');// 预审 Y  or  E
+        $trail_type = $request->input('trail_type');// 预审 Y  or  N
         $reason = $request->input('reason');
         $rules=[
             'self_id'=>'required',
@@ -1414,6 +1414,13 @@ class PlatformController extends CommonController{
         if($validator->passes()) {
             $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
             $info = TmsConnact::where('self_id',$self_id)->select($select)->first();
+            if($trail_type == 'N'){
+                if ($info->first_trail != 3){
+                    $msg['code']=303;
+                    $msg['msg']='请先进行初审操作！';
+                    return $msg;
+                }
+            }
             $old_info = [
                 'state'=>$info->state,
                 'update_time'=>$now_time
