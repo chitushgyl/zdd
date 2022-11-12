@@ -505,5 +505,43 @@ class HomeController extends Controller {
 
     }
 
+    /**
+     * 查询是否有正在审核中的贷款信息
+     * */
+    public function createLoan(Request $request){
+        $user_info     = $request->get('user_info');//接收中间件产生的参数
+        $project_type  = $request->get('project_type');
+        //接收数据
+        $address     = $request->input('address');
+        $name     = $request->input('name');
+        $type     = $request->input('type');
+
+        if($user_info->total_user_id){
+            $where=[
+                ['total_user_id','=',$user_info->total_user_id],
+                ['delete_flag','=','Y'],
+            ];
+        }else{
+            $where=[
+                ['group_code','=',$user_info->group_code],
+                ['delete_flag','=','Y'],
+            ];
+        }
+
+        $connact_count = TmsConnact::where($where)->count();
+        if ($connact_count >0){
+            $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->orderBy('create_time','desc')->first();
+            if ($connact_info->pass == 1){
+                $msg['code'] = 300;
+                $msg['msg'] = '您的贷款申请正在审核中，请勿重复提交！';
+                return $msg;
+            }
+        }
+        $msg['code'] = 200;
+        $msg['msg']  = " ";
+
+        return $msg;
+    }
+
 
 }
