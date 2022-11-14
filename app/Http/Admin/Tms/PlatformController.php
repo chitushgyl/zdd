@@ -567,6 +567,7 @@ class PlatformController extends CommonController{
         $car_name           =$request->input('car_name');//车名
         $picture            =$request->input('picture');//图片
         $param              =$request->input('param');//配置参数
+        $sort              =$request->input('sort');//配置参数
 
 
         /*** 虚拟数据
@@ -615,6 +616,7 @@ class PlatformController extends CommonController{
             $data['car_name']       =$car_name;
             $data['picture']        =img_for($picture,'in');
             $data['param']          =json_encode($param,JSON_UNESCAPED_UNICODE);
+            $data['sort']          =$sort;
 
             //dump($data);
 
