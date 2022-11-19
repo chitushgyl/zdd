@@ -421,7 +421,7 @@ class HomeController extends Controller {
 
 
         $where = get_list_where($search);
-        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id','create_time','update_time'];
+        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id','create_time','update_time','remark'];
         $data['info'] = TmsConnact::where($where)
             ->offset($firstrow)
             ->limit($listrows)

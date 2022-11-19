@@ -1225,7 +1225,7 @@ class PlatformController extends CommonController{
         ];
 
         $where=get_list_where($search);
-        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company','fail_reason'];
+        $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','pass','first_trail','create_time','update_time','hold_img','auth_serch_company','fail_reason','remark'];
         switch ($group_info['group_id']){
             case 'all':
                 $data['total']=TmsConnact::where($where)->count(); //总的数据量
@@ -1332,7 +1332,7 @@ class PlatformController extends CommonController{
     public function loanDetails(Request $request,Details $details){
         $self_id    = $request->input('self_id');
         $table_name = 'tms_connact';
-        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id','create_time','update_time'];
+        $select = ['self_id','name','connact','type','fail_reason','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','total_user_id','create_time','update_time','remark'];
         // $self_id = 'car_202101111749191839630920';
         $info = $details->details($self_id,$table_name,$select);
 
@@ -1404,6 +1404,7 @@ class PlatformController extends CommonController{
         $type = $request->input('type');//操作类别:pass 通过  fail失败
         $trail_type = $request->input('trail_type');// 预审 Y  or  N
         $reason = $request->input('reason');
+        $remark = $request->input('remark');
         $rules=[
             'self_id'=>'required',
         ];
@@ -1414,7 +1415,7 @@ class PlatformController extends CommonController{
 //        $input['type'] =  $type = 'pass';
         $validator=Validator::make($input,$rules,$message);
         if($validator->passes()) {
-            $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass'];
+            $select = ['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','remark'];
             $info = TmsConnact::where('self_id',$self_id)->select($select)->first();
             if($trail_type == 'N'){
                 if ($info->first_trail != 3){
@@ -1434,6 +1435,7 @@ class PlatformController extends CommonController{
                         $new_info['first_trail'] = 3;
                     }else{
                         $new_info['pass'] = 3;
+                        $new_info['remark'] = $remark;
                     }
                     $id = TmsConnact::where('self_id',$self_id)->update($new_info);
 
@@ -1546,7 +1548,7 @@ class PlatformController extends CommonController{
             ];
             $where=get_list_where($search);
 
-            $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','fail_reason','create_time'];
+            $select=['self_id','name','connact','type','company_name','address','read_flag','delete_flag','group_code','channel_way','identity','id_front','id_back','auth_serch','auth_serch_company','hold_img','first_trail','pass','fail_reason','create_time','remark'];
             $info=TmsConnact::where($where)->whereIn('self_id',explode(',',$id_list))->orderBy('create_time', 'desc')->select($select)->get();
 //            dd($info->toArray());
             if($info){
@@ -1562,6 +1564,7 @@ class PlatformController extends CommonController{
                     "first_trail"=>'预审状态',
                     "pass"=>'征信审核状态',
                     "fail_reason"=>'不通过原因',
+                    "remark"=>'备注',
                 ]];
 
                 /** 现在根据查询到的数据去做一个导出的数据**/
@@ -1605,6 +1608,12 @@ class PlatformController extends CommonController{
                         $list['fail_reason']=$v->fail_reason;
                     }else{
                         $list['fail_reason']='';
+                    }
+
+                    if($v->pass == 3){
+                        $list['pass']=$v->pass;
+                    }else{
+                        $list['pass']='';
                     }
 
                     $data_execl[]=$list;
