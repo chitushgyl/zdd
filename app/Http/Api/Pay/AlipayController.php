@@ -61,7 +61,7 @@ class AlipayController extends Controller{
         $pay_type  = array_column(config('tms.alipay_notify'),'notify','key');
         $self_id   = $request->input('self_id');// 订单ID
         $price     = $request->input('price');// 支付金额
-        $price     = 0.01;
+//        $price     = 0.01;
         if (!$user_info){
             $msg['code'] = 401;
             $msg['msg']  = '未登录，请完成登录！';
