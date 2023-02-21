@@ -429,9 +429,9 @@ class LoginController extends Controller{
                 if ($count_identity){
                     if($count_identity->type != $id_type){
                         if ($id_type == 'user'){
-                            $identity_type = '赤途承运端';
+                            $identity_type = '装多多司机端';
                         }else{
-                            $identity_type = '赤途冷链';
+                            $identity_type = '装多多用户端';
                         }
                         $msg['code'] = 305;
                         $msg['msg']  = '您已注册'.$identity_type.',同一账号只能注册一个身份';
@@ -616,9 +616,9 @@ class LoginController extends Controller{
                 if ($count_identity){
                     if($count_identity->type != $type){
                         if ($type == 'user'){
-                            $identity_type = '赤途承运端';
+                            $identity_type = '装多多司机端';
                         }else{
-                            $identity_type = '赤途冷链';
+                            $identity_type = '装多多用户端';
                         }
                         $msg['code'] = 305;
                         $msg['msg']  = '您已注册'.$identity_type.',同一账号只能注册一个身份';
