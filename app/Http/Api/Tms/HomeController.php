@@ -240,7 +240,6 @@ class HomeController extends Controller {
                 'identity'=>'required',
                 'id_front'=>'required',
                 'id_back'=>'required',
-                'auth_serch'=>'required',
                 'hold_img'=>'required',
             ];
             $message=[
@@ -251,7 +250,6 @@ class HomeController extends Controller {
                 'identity.required'=>'请填写身份证号',
                 'id_front.required'=>'请上传身份证正面照',
                 'id_back.required'=>'请上传身份证反面照',
-                'auth_serch.required'=>'请上传个人授权查询书',
                 'hold_img.required'=>'请上传手持照片',
             ];
         }else{
@@ -260,14 +258,13 @@ class HomeController extends Controller {
                 'company_name'=>'required',
                 'connact'=>'required',
                 'channel_way'=>'required',
-                'auth_serch_company'=>'required',
+
             ];
             $message=[
                 'name.required'=>'请填写姓名',
                 'connact.required'=>'请填写联系方式',
                 'company_name.required'=>'请填写公司名称',
                 'channel_way.required'=>'请填写推荐渠道公司名称',
-                'auth_serch_company.required'=>'请上传公司授权书',
             ];
         }
         $where = [];
@@ -290,7 +287,7 @@ class HomeController extends Controller {
            }else{
                if ($connact_info->pass == 1){
                    $msg['code'] = 307;
-                   $msg['msg'] = '您的贷款申请正在审核中，请勿重复提交！';
+                   $msg['msg'] = '您的申请正在审核中，请勿重复提交！';
                    return $msg;
                }
            }
@@ -532,7 +529,7 @@ class HomeController extends Controller {
             $connact_info = TmsConnact::where($where)->select('self_id','pass','first_trail')->orderBy('create_time','desc')->first();
             if ($connact_info->pass == 1){
                 $msg['code'] = 300;
-                $msg['msg'] = '您的贷款申请正在审核中，请勿重复提交！';
+                $msg['msg'] = '您的申请正在审核中，请勿重复提交！';
                 return $msg;
             }
         }
